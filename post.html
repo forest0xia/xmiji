@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading... — Forest Xia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --paper: #f4efe6;
+      --ink: #2a2622;
+      --ink-light: #5a5650;
+      --ink-wash: #8a847e;
+      --ink-faint: #b8b2ab;
+      --vermillion: #c94040;
+      --vermillion-muted: #b5524a;
+      --border: rgba(42, 38, 34, 0.08);
+      --font-brush: 'Ma Shan Zheng', cursive;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Crimson Pro', serif;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-body); background: var(--paper); color: var(--ink); overflow-x: hidden; min-height: 100vh; }
+    ::selection { background: var(--vermillion); color: var(--paper); }
+    a { color: inherit; text-decoration: none; }
+
+    .bg-ink { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .bg-ink img { width: 100%; height: 100%; object-fit: cover; opacity: 0.05; }
+
+    /* ─── Top Bar ─── */
+    .top-bar {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+      padding: 10px 24px; border-radius: 100px;
+      background: rgba(244,239,230,0.6); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 4px 24px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.5);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .top-seal { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--vermillion); color: var(--paper); font-family: var(--font-brush); font-size: 18px; border-radius: 3px; }
+    .top-back { font-size: 14px; color: var(--ink-light); display: flex; align-items: center; gap: 5px; transition: color 0.3s ease; }
+    .top-back:hover { color: var(--ink); }
+    .top-back .cn { font-family: var(--font-brush); font-size: 17px; }
+    .top-back svg { width: 14px; height: 14px; }
+
+    /* ─── Filter Toggle (mobile) ─── */
+    .filter-toggle {
+      display: none; background: none; border: none; padding: 6px; cursor: pointer; color: var(--ink-light);
+      -webkit-tap-highlight-color: transparent; margin-left: auto;
+    }
+    .filter-toggle svg { width: 18px; height: 18px; }
+
+    /* ─── Filter Overlay (mobile) ─── */
+    .filter-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200; background: rgba(42,38,34,0.15);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .filter-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .filter-panel {
+      position: absolute; top: 64px; right: 16px; width: 220px;
+      padding: 20px 20px; border-radius: 16px;
+      background: rgba(244,239,230,0.85); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+      transform: translateY(-8px); transition: transform 0.3s ease;
+    }
+    .filter-overlay.open .filter-panel { transform: translateY(0); }
+
+    .filter-panel .cat-list { list-style: none; max-height: 441px; overflow-y: auto; }
+    .filter-panel .cat-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 4px; background: none; border: none; font-family: var(--font-body); font-size: 15px; color: var(--ink-wash); cursor: pointer; text-align: left; border-bottom: 1px solid var(--border); transition: color 0.3s ease; }
+    .filter-panel .cat-btn:last-child { border-bottom: none; }
+    .filter-panel .cat-btn .cn { font-family: var(--font-brush); font-size: 19px; min-width: 20px; }
+    .filter-panel .cat-count { font-size: 11px; color: var(--ink-faint); margin-left: auto; }
+
+    /* ─── Post Content ─── */
+    .post {
+      position: relative; z-index: 1;
+      max-width: 720px; margin: 0 auto;
+      padding: 100px 40px 80px;
+    }
+
+    .post-image {
+      width: 100%; overflow: hidden; margin-bottom: 36px;
+      box-shadow: 0 6px 32px rgba(42,38,34,0.08);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+    .post-image img { width: 100%; display: block; }
+
+    .post-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+
+    .post-date {
+      font-size: 15px; font-weight: 300; color: var(--ink-faint); font-style: italic; margin-bottom: 16px;
+    }
+
+    .post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .post-tag {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
+      padding: 5px 16px; background: rgba(255,255,255,0.4); backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.5); border-radius: 100px; color: var(--ink-light);
+    }
+
+    .post-body {
+      font-size: 17px; font-weight: 300; line-height: 1.9; color: var(--ink-light);
+    }
+    .post-body p { margin-bottom: 20px; }
+    .post-body p:last-child { margin-bottom: 0; }
+    .post-body strong { color: var(--ink); font-weight: 500; }
+    .post-body a { color: var(--vermillion-muted); text-decoration: underline; text-underline-offset: 3px; }
+    .post-body a:hover { color: var(--vermillion); }
+    .post-body img { max-width: 100%; margin: 16px 0; border-radius: 2px; }
+
+    /* ─── Comments ─── */
+    .comments {
+      margin-top: 56px; padding-top: 32px; border-top: 1px solid var(--border);
+    }
+    .comments-title {
+      font-family: var(--font-display); font-size: 22px; font-weight: 500;
+      margin-bottom: 20px; display: flex; align-items: baseline; gap: 8px;
+    }
+    .comments-title .cn { font-family: var(--font-brush); font-size: 26px; color: var(--ink-wash); }
+
+    .giscus-frame { min-height: 150px; }
+
+    /* ─── Post Nav ─── */
+    .post-nav {
+      margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    }
+    .post-nav a {
+      font-size: 14px; color: var(--ink-wash); display: flex; align-items: center; gap: 6px; transition: color 0.3s ease;
+    }
+    .post-nav a:hover { color: var(--ink); }
+    .post-nav .cn { font-family: var(--font-brush); font-size: 16px; }
+    .post-nav .label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint); }
+    .post-nav .prev-next-title { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--ink-light); }
+    .post-nav-item { display: flex; flex-direction: column; gap: 2px; }
+    .post-nav-item.next { text-align: right; align-items: flex-end; }
+
+    /* ─── Footer ─── */
+    .footer {
+      position: relative; z-index: 1; padding: 24px 40px; border-top: 1px solid var(--border);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-text { font-size: 12px; color: var(--ink-faint); }
+
+    /* ─── Fade ─── */
+    .fade { opacity: 0; animation: fadeIn 0.8s ease forwards; }
+    .fade-d1 { animation-delay: 0.05s; }
+    .fade-d2 { animation-delay: 0.1s; }
+    .fade-d3 { animation-delay: 0.15s; }
+    .fade-d4 { animation-delay: 0.2s; }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .filter-toggle { display: block; }
+      .filter-overlay { display: block; }
+    }
+
+    @media (max-width: 600px) {
+      .post { padding: 88px 20px 60px; }
+      .post-image { margin-left: -20px; margin-right: -20px; width: calc(100% + 40px); }
+      .footer { padding: 20px; flex-direction: column; gap: 10px; }
+      .post-nav { flex-direction: column; align-items: stretch; }
+      .post-nav-item.next { text-align: left; align-items: flex-start; }
+    }
+
+    @media (max-width: 560px) {
+      .top-bar { left: 12px; right: 12px; transform: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-ink"><img src="sample-images/d6ce0846b084b4db94e8886472d42db2.jpg" alt="" aria-hidden="true"></div>
+
+  <div class="top-bar">
+    <a href="index.html" class="top-seal">夏</a>
+    <a href="gallery.html" class="top-back">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      <span class="cn">集</span> Gallery
+    </a>
+    <button class="filter-toggle" id="filterToggle" aria-label="Filter posts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile filter overlay -->
+  <div class="filter-overlay" id="filterOverlay">
+    <div class="filter-panel">
+      <ul class="cat-list" id="mobile-cat-list"></ul>
+    </div>
+  </div>
+
+  <article class="post" id="post"></article>
+
+  <footer class="footer">
+    <span class="footer-text">&copy; 2026 Forest Xia</span>
+  </footer>
+
+  <script src="posts.js"></script>
+  <script>
+    /* ─── Mobile filter ─── */
+    (function() {
+      const tagCN = { Photography:'影', Cities:'城', 'Open Source':'源', CLI:'令', 'Creative Coding':'创', Engineering:'工', Writing:'文', Hardware:'器', Design:'设' };
+      const tagMap = {};
+      posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
+      let html = `<li><a href="gallery.html" class="cat-btn"><span class="cn">全</span> All <span class="cat-count">${posts.length}</span></a></li>`;
+      Object.entries(tagMap).sort((a,b)=>b[1]-a[1]).forEach(([tag,count]) => {
+        const cn = tagCN[tag]||'';
+        html += `<li><a href="gallery.html?cat=${encodeURIComponent(tag)}" class="cat-btn">${cn?`<span class="cn">${cn}</span> `:''}${tag} <span class="cat-count">${count}</span></a></li>`;
+      });
+      document.getElementById('mobile-cat-list').innerHTML = html;
+
+      const overlay = document.getElementById('filterOverlay');
+      document.getElementById('filterToggle').addEventListener('click', () => overlay.classList.toggle('open'));
+      overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+    })();
+  </script>
+  <script>
+    const slug = new URLSearchParams(window.location.search).get('id');
+    const postIdx = posts.findIndex(p => p.slug === slug);
+    const post = posts[postIdx];
+
+    if (!post) {
+      document.getElementById('post').innerHTML = '<p>Post not found.</p>';
+    } else {
+      document.title = `${post.title} — Forest Xia`;
+
+      // Set meta description
+      const meta = document.querySelector('meta[name="description"]');
+      if (meta) meta.content = post.body.replace(/<[^>]*>/g, '').slice(0, 160);
+
+      function formatDate(d) {
+        return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+      }
+
+      // Previous / Next posts
+      const prev = posts[postIdx + 1] || null; // older
+      const next = posts[postIdx - 1] || null; // newer
+
+      document.getElementById('post').innerHTML = `
+        <div class="post-image fade"><img src="${post.image}" alt="${post.title}"></div>
+        <h1 class="post-title fade fade-d1">${post.title}</h1>
+        <time class="post-date fade fade-d2">${formatDate(post.date)}</time>
+        <div class="post-tags fade fade-d2">${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}</div>
+        <div class="post-body fade fade-d3">${post.body}</div>
+
+        <nav class="post-nav fade fade-d4">
+          ${prev ? `<a href="post.html?id=${prev.slug}" class="post-nav-item"><span class="label">← Older</span><span class="prev-next-title">${prev.title}</span></a>` : '<span></span>'}
+          ${next ? `<a href="post.html?id=${next.slug}" class="post-nav-item next"><span class="label">Newer →</span><span class="prev-next-title">${next.title}</span></a>` : '<span></span>'}
+        </nav>
+
+        <div class="comments fade fade-d4">
+          <h3 class="comments-title"><span class="cn">议</span> Comments</h3>
+          <div class="giscus-frame" id="giscus-container"></div>
+        </div>
+      `;
+
+      /*
+       * ╔══════════════════════════════════════════════════════╗
+       * ║  GISCUS SETUP — powered by GitHub Discussions       ║
+       * ║                                                      ║
+       * ║  1. Push site to a PUBLIC GitHub repo                ║
+       * ║  2. Settings → Features → enable Discussions         ║
+       * ║  3. Install: github.com/apps/giscus                  ║
+       * ║  4. Go to giscus.app → enter repo → get config       ║
+       * ║  5. Replace values below                              ║
+       * ║                                                      ║
+       * ║  Giscus handles login/comment UI automatically:      ║
+       * ║  - Not logged in → shows "Sign in with GitHub"       ║
+       * ║  - Logged in → shows comment box + reactions          ║
+       * ╚══════════════════════════════════════════════════════╝
+       */
+      const giscusScript = document.createElement('script');
+      giscusScript.src = 'https://giscus.app/client.js';
+      giscusScript.setAttribute('data-repo', 'forest0xia/xmiji');
+      giscusScript.setAttribute('data-repo-id', '');
+      giscusScript.setAttribute('data-category', 'Comments');
+      giscusScript.setAttribute('data-category-id', '');
+      giscusScript.setAttribute('data-mapping', 'specific');
+      giscusScript.setAttribute('data-term', post.slug);
+      giscusScript.setAttribute('data-strict', '0');
+      giscusScript.setAttribute('data-reactions-enabled', '1');
+      giscusScript.setAttribute('data-emit-metadata', '0');
+      giscusScript.setAttribute('data-input-position', 'top');
+      giscusScript.setAttribute('data-theme', 'light_protanopia');
+      giscusScript.setAttribute('data-lang', 'en');
+      giscusScript.setAttribute('data-loading', 'lazy');
+      giscusScript.crossOrigin = 'anonymous';
+      giscusScript.async = true;
+      document.getElementById('giscus-container').appendChild(giscusScript);
+    }
+  </script>
+</body>
+</html>

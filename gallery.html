@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>集 Gallery — Forest Xia</title>
+  <meta name="description" content="Projects, photos, thoughts by Forest Xia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --paper: #f4efe6;
+      --ink: #2a2622;
+      --ink-light: #5a5650;
+      --ink-wash: #8a847e;
+      --ink-faint: #b8b2ab;
+      --vermillion: #c94040;
+      --vermillion-muted: #b5524a;
+      --border: rgba(42, 38, 34, 0.08);
+      --font-brush: 'Ma Shan Zheng', cursive;
+      --font-display: 'Cormorant Garamond', serif;
+      --font-body: 'Crimson Pro', serif;
+    }
+
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font-body); background: var(--paper); color: var(--ink); overflow-x: hidden; min-height: 100vh; }
+    ::selection { background: var(--vermillion); color: var(--paper); }
+    a { color: inherit; text-decoration: none; }
+
+    .bg-ink { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+    .bg-ink img { width: 100%; height: 100%; object-fit: cover; opacity: 0.06; }
+
+    /* ─── Top Bar ─── */
+    .top-bar {
+      position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 100;
+      padding: 10px 24px; border-radius: 100px;
+      background: rgba(244,239,230,0.6); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 4px 24px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.5);
+      display: flex; align-items: center; gap: 14px;
+    }
+    .top-seal { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--vermillion); color: var(--paper); font-family: var(--font-brush); font-size: 18px; border-radius: 3px; }
+    .top-title { font-family: var(--font-body); font-size: 14px; color: var(--ink-light); display: flex; align-items: center; gap: 5px; }
+    .top-title .cn { font-family: var(--font-brush); font-size: 17px; }
+
+    /* ─── Filter Toggle (mobile) ─── */
+    .filter-toggle {
+      display: none; background: none; border: none; padding: 6px; cursor: pointer; color: var(--ink-light);
+      -webkit-tap-highlight-color: transparent; margin-left: auto;
+    }
+    .filter-toggle svg { width: 18px; height: 18px; }
+
+    /* ─── Filter Overlay (mobile) ─── */
+    .filter-overlay {
+      display: none; position: fixed; inset: 0; z-index: 200; background: rgba(42,38,34,0.15);
+      opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    }
+    .filter-overlay.open { opacity: 1; pointer-events: auto; }
+
+    .filter-panel {
+      position: absolute; top: 64px; right: 16px; width: 220px;
+      padding: 20px 20px; border-radius: 16px;
+      background: rgba(244,239,230,0.85); backdrop-filter: blur(24px) saturate(1.3); -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 40px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
+      transform: translateY(-8px); transition: transform 0.3s ease;
+    }
+    .filter-overlay.open .filter-panel { transform: translateY(0); }
+
+    .filter-panel .cat-list { list-style: none; max-height: 441px; overflow-y: auto; }
+    .filter-panel .cat-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 10px 4px; background: none; border: none; font-family: var(--font-body); font-size: 15px; color: var(--ink-wash); cursor: pointer; text-align: left; border-bottom: 1px solid var(--border); transition: color 0.3s ease; }
+    .filter-panel .cat-btn:last-child { border-bottom: none; }
+    .filter-panel .cat-btn.active { color: var(--ink); font-weight: 500; }
+    .filter-panel .cat-btn .cn { font-family: var(--font-brush); font-size: 19px; min-width: 20px; }
+    .filter-panel .cat-btn.active .cn { color: var(--vermillion); }
+    .filter-panel .cat-count { font-size: 11px; color: var(--ink-faint); margin-left: auto; }
+
+    /* ─── Layout ─── */
+    .layout { position: relative; z-index: 1; display: grid; grid-template-columns: 170px 1fr; gap: 0; min-height: 100vh; padding-top: 72px; }
+
+    /* ─── Desktop Sidebar ─── */
+    .sidebar { position: sticky; top: 72px; height: calc(100vh - 72px); padding: 32px 24px 32px 40px; border-right: 1px solid var(--border); overflow-y: auto; }
+    .sidebar-label { font-size: 10px; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 16px; }
+    .sidebar .cat-list { list-style: none; }
+    .sidebar .cat-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 0; background: none; border: none; font-family: var(--font-body); font-size: 14px; color: var(--ink-wash); cursor: pointer; text-align: left; transition: color 0.3s ease; }
+    .sidebar .cat-btn:hover { color: var(--ink); }
+    .sidebar .cat-btn.active { color: var(--ink); font-weight: 500; }
+    .sidebar .cat-btn .cn { font-family: var(--font-brush); font-size: 18px; line-height: 1; min-width: 20px; }
+    .sidebar .cat-btn.active .cn { color: var(--vermillion); }
+    .sidebar .cat-count { font-size: 11px; color: var(--ink-faint); margin-left: auto; }
+
+    /* ─── Main ─── */
+    .main { padding: 32px 48px 80px; min-width: 0; }
+    .page-title { font-family: var(--font-display); font-weight: 400; font-size: clamp(32px,4vw,48px); display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+    .page-title .cn { font-family: var(--font-brush); font-size: clamp(38px,5vw,56px); color: var(--ink-wash); }
+    .page-subtitle { font-size: 15px; font-weight: 300; color: var(--ink-wash); font-style: italic; margin-bottom: 32px; }
+
+    /* ─── Grid ─── */
+    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .gallery-item { display: block; -webkit-tap-highlight-color: transparent; }
+    .gallery-item.filtered-out { display: none; }
+    .gallery-thumb { position: relative; aspect-ratio: 3/4; overflow: hidden; background: rgba(255,255,255,0.3); box-shadow: 0 3px 20px rgba(42,38,34,0.06); border: 1px solid rgba(255,255,255,0.5); transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+    .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .gallery-item:hover .gallery-thumb { border-color: rgba(201,64,64,0.12); box-shadow: 0 6px 28px rgba(42,38,34,0.1); }
+    .gallery-meta { padding: 12px 0 0; }
+    .gallery-item-title { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--ink); transition: color 0.3s ease; }
+    .gallery-item:hover .gallery-item-title { color: var(--vermillion-muted); }
+    .gallery-item-date { font-size: 11px; font-weight: 300; color: var(--ink-faint); margin-top: 2px; }
+
+    /* ─── Footer ─── */
+    .footer { position: relative; z-index: 1; padding: 24px 48px 24px 210px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .footer-text { font-size: 12px; color: var(--ink-faint); }
+    .footer-link { font-size: 12px; color: var(--ink-wash); display: inline-flex; align-items: center; gap: 4px; transition: color 0.3s ease; }
+    .footer-link .cn { font-family: var(--font-brush); font-size: 14px; }
+    .footer-link:hover { color: var(--ink); }
+
+    .reveal { opacity: 0; transition: opacity 0.8s ease; }
+    .reveal.revealed { opacity: 1; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .filter-toggle { display: block; }
+      .filter-overlay { display: block; }
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .main { padding: 24px 24px 60px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+      .footer { padding: 24px; }
+    }
+
+    @media (max-width: 600px) {
+      .gallery-grid { gap: 14px; }
+      .gallery-item-title { font-size: 14px; }
+      .footer { flex-direction: column; gap: 10px; }
+    }
+
+    @media (max-width: 560px) {
+      .top-bar { left: 12px; right: 12px; transform: none; justify-content: flex-start; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-ink"><img src="sample-images/31767d76024f558a68407c3de4907ee8.jpg" alt="" aria-hidden="true"></div>
+
+  <div class="top-bar">
+    <a href="index.html" class="top-seal">夏</a>
+    <span class="top-title"><span class="cn">集</span> Gallery</span>
+    <button class="filter-toggle" id="filterToggle" aria-label="Filter posts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="20" y2="12"/><line x1="12" y1="18" x2="20" y2="18"/></svg>
+    </button>
+  </div>
+
+  <!-- Mobile filter overlay -->
+  <div class="filter-overlay" id="filterOverlay">
+    <div class="filter-panel">
+      <ul class="cat-list" id="mobile-cat-list"></ul>
+    </div>
+  </div>
+
+  <div class="layout">
+    <aside class="sidebar">
+      <span class="sidebar-label">Filter</span>
+      <ul class="cat-list" id="desktop-cat-list"></ul>
+    </aside>
+
+    <div class="main">
+      <header>
+        <h1 class="page-title reveal"><span class="cn">集</span> Gallery</h1>
+        <p class="page-subtitle reveal">Projects, photos, thoughts, and things I've built.</p>
+      </header>
+      <div class="gallery-grid" id="gallery-grid"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <span class="footer-text">&copy; 2026 Forest Xia</span>
+    <a href="index.html" class="footer-link"><span class="cn">归</span> Home</a>
+  </footer>
+
+  <script src="posts.js"></script>
+  <script>
+    const tagCN = { Photography:'影', Cities:'城', 'Open Source':'源', CLI:'令', 'Creative Coding':'创', Engineering:'工', Writing:'文', Hardware:'器', Design:'设' };
+    let activeCategory = 'all';
+
+    function formatDate(d) {
+      return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'short',day:'numeric'});
+    }
+
+    /* ─── Render sidebar categories into a target element ─── */
+    function renderCatList(target) {
+      const tagMap = {};
+      posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
+      let html = `<li><button class="cat-btn active" data-cat="all"><span class="cn">全</span> All <span class="cat-count">${posts.length}</span></button></li>`;
+      Object.entries(tagMap).sort((a,b)=>b[1]-a[1]).forEach(([tag,count]) => {
+        const cn = tagCN[tag]||'';
+        html += `<li><button class="cat-btn" data-cat="${tag}">${cn?`<span class="cn">${cn}</span> `:''}${tag} <span class="cat-count">${count}</span></button></li>`;
+      });
+      target.innerHTML = html;
+    }
+
+    function setupCatClicks(list) {
+      list.addEventListener('click', e => {
+        const btn = e.target.closest('.cat-btn');
+        if (!btn) return;
+        activeCategory = btn.dataset.cat;
+        // sync both lists
+        document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === activeCategory));
+        filterGrid();
+        // close mobile overlay
+        document.getElementById('filterOverlay').classList.remove('open');
+      });
+    }
+
+    function filterGrid() {
+      document.querySelectorAll('.gallery-item').forEach(item => {
+        const tags = JSON.parse(item.dataset.tags);
+        item.classList.toggle('filtered-out', activeCategory !== 'all' && !tags.includes(activeCategory));
+      });
+    }
+
+    /* ─── Grid ─── */
+    function renderGrid() {
+      document.getElementById('gallery-grid').innerHTML = posts.map(p => `
+        <a href="post.html?id=${p.slug}" class="gallery-item" data-tags='${JSON.stringify(p.tags)}'>
+          <div class="gallery-thumb"><img src="${p.image}" alt="${p.title}" loading="lazy"></div>
+          <div class="gallery-meta">
+            <h2 class="gallery-item-title">${p.title}</h2>
+            <time class="gallery-item-date">${formatDate(p.date)}</time>
+          </div>
+        </a>`).join('');
+    }
+
+    /* ─── Mobile filter toggle ─── */
+    const overlay = document.getElementById('filterOverlay');
+    document.getElementById('filterToggle').addEventListener('click', () => overlay.classList.toggle('open'));
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+
+    /* ─── Init ─── */
+    const desktopList = document.getElementById('desktop-cat-list');
+    const mobileList = document.getElementById('mobile-cat-list');
+    renderCatList(desktopList);
+    renderCatList(mobileList);
+    setupCatClicks(desktopList);
+    setupCatClicks(mobileList);
+    renderGrid();
+
+    /* ─── URL param filter ─── */
+    const urlCat = new URLSearchParams(window.location.search).get('cat');
+    if (urlCat) {
+      activeCategory = urlCat;
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === activeCategory));
+      filterGrid();
+    }
+
+    const obs = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); }
+    }), { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>

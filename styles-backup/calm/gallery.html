@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Mingyou Xia</title>
+  <meta name="description" content="Projects, photography, and creations by Mingyou Xia.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-deep: #090c14;
+      --bg-surface: #0f1219;
+      --bg-elevated: #161a24;
+      --text-primary: #e9e4dc;
+      --text-secondary: #7a756e;
+      --text-muted: #3d3a36;
+      --accent: #c89b3c;
+      --accent-light: #ddb454;
+      --accent-dim: #8a6b2a;
+      --border: #1e222d;
+      --font-display: 'Syne', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    ::selection {
+      background: var(--accent);
+      color: var(--bg-deep);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* ─── Navigation ─── */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 24px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(9, 12, 20, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      pointer-events: none;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 0.05em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 40px;
+      list-style: none;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-links a {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      transition: color 0.4s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-primary);
+    }
+
+    .nav-links a.active {
+      color: var(--accent);
+    }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      padding: 12px;
+      z-index: 101;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    /* ─── Page Header ─── */
+    .page-header {
+      padding: 140px 48px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .page-header.hidden {
+      display: none;
+    }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(36px, 6vw, 64px);
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .page-subtitle {
+      margin-top: 16px;
+      font-size: 15px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      max-width: 480px;
+    }
+
+    /* ─── Gallery Grid ─── */
+    .gallery-view {
+      padding: 40px 48px 120px;
+      max-width: 1200px;
+      margin: 0 auto;
+      transition: opacity 0.4s ease;
+    }
+
+    .gallery-view.hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .gallery-item {
+      display: block;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .gallery-thumb {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      transition: border-color 0.4s ease;
+    }
+
+    .gallery-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-thumb .placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.3;
+    }
+
+    .gallery-item:hover .gallery-thumb {
+      border-color: var(--accent-dim);
+    }
+
+    .gallery-meta {
+      padding: 16px 0 0;
+    }
+
+    .gallery-item-title {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: color 0.4s ease;
+      line-height: 1.3;
+    }
+
+    .gallery-item:hover .gallery-item-title {
+      color: var(--accent-light);
+    }
+
+    .gallery-item-date {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── Detail View ─── */
+    .detail-view {
+      padding: 120px 48px 120px;
+      max-width: 860px;
+      margin: 0 auto;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      pointer-events: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .detail-view.active {
+      opacity: 1;
+      pointer-events: auto;
+      position: relative;
+    }
+
+    .detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      transition: color 0.4s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .detail-back:hover {
+      color: var(--text-primary);
+    }
+
+    .detail-back svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .detail-image {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+
+    .detail-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .detail-image .placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 48px;
+      font-weight: 700;
+      color: var(--text-muted);
+      opacity: 0.2;
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .detail-title {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: clamp(28px, 4vw, 40px);
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+    }
+
+    .detail-date {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .detail-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+
+    .detail-tag {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      color: var(--text-secondary);
+    }
+
+    .detail-body {
+      font-size: 16px;
+      line-height: 1.85;
+      color: var(--text-secondary);
+    }
+
+    .detail-body p {
+      margin-bottom: 20px;
+    }
+
+    .detail-body p:last-child {
+      margin-bottom: 0;
+    }
+
+    .detail-body strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .detail-body a {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .detail-body a:hover {
+      color: var(--accent-light);
+    }
+
+    /* ─── Footer ─── */
+    .footer {
+      padding: 32px 48px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      letter-spacing: 0.04em;
+    }
+
+    .footer-link {
+      font-size: 12px;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      transition: color 0.4s ease;
+    }
+
+    .footer-link:hover {
+      color: var(--text-primary);
+    }
+
+    /* ─── Reveal ─── */
+    .reveal {
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    .reveal.revealed {
+      opacity: 1;
+    }
+
+    /* ─── Keyframes ─── */
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 900px) {
+      .nav { padding: 20px 24px; }
+      .nav-links { gap: 24px; }
+      .page-header { padding: 120px 24px 32px; }
+      .gallery-view { padding: 32px 24px 80px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .detail-view { padding: 100px 24px 80px; }
+      .footer { padding: 24px; }
+    }
+
+    @media (max-width: 600px) {
+      .gallery-grid { grid-template-columns: 1fr; gap: 32px; }
+      .gallery-thumb { aspect-ratio: 16 / 10; }
+      .detail-image {
+        margin-left: -24px;
+        margin-right: -24px;
+        width: calc(100% + 48px);
+        border-left: none;
+        border-right: none;
+      }
+      .detail-header { flex-direction: column; gap: 4px; }
+      .footer { flex-direction: column; gap: 12px; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-toggle { display: flex; }
+
+      .nav-links {
+        position: fixed;
+        inset: 0;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-deep);
+        gap: 32px;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+        z-index: 99;
+      }
+
+      .nav-links.open {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .nav-links.open a {
+        font-size: 20px;
+        letter-spacing: 0.12em;
+        color: var(--text-primary);
+      }
+
+      .nav-toggle.open span:nth-child(1) {
+        transform: rotate(45deg) translate(4px, 4px);
+      }
+      .nav-toggle.open span:nth-child(2) {
+        opacity: 0;
+      }
+      .nav-toggle.open span:nth-child(3) {
+        transform: rotate(-45deg) translate(4px, -4px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="nav-logo">MX</a>
+    <button class="nav-toggle" aria-label="Menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gallery.html" class="active">Gallery</a></li>
+      <li><a href="index.html#connect">Connect</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <h1 class="page-title reveal">Gallery</h1>
+    <p class="page-subtitle reveal">Projects, experiments, and things I've made along the way.</p>
+  </header>
+
+  <!-- Gallery Grid -->
+  <main class="gallery-view" id="gallery-grid"></main>
+
+  <!-- Detail View -->
+  <article class="detail-view" id="detail-view"></article>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span class="footer-text">&copy; 2026 Mingyou Xia</span>
+    <a href="index.html" class="footer-link">Back to Home</a>
+  </footer>
+
+  <script>
+    /* ─── POST DATA ─── */
+    const posts = [
+      {
+        slug: 'night-city-series',
+        title: 'Night City Series',
+        date: '2026-02-10',
+        image: '',
+        gradient: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #c89b3c 100%)',
+        tags: ['Photography', 'Cities'],
+        summary: 'A collection of nighttime cityscapes captured across different cities.',
+        body: `<p>There's something about cities after dark that reveals their true character. The artificial constellations of windows, the rhythm of traffic lights, the silhouettes against illuminated skylines.</p>
+<p>This series captures nighttime cityscapes from various locations — each city has its own light signature, its own color temperature, its own pulse. Shot over the course of two years, mostly handheld or with minimal gear.</p>
+<p><strong>Equipment:</strong> Sony A7IV, 24-70mm f/2.8 GM, occasional tripod for long exposures. Post-processed in Lightroom with a focus on preserving the natural warmth of city lights.</p>`
+      },
+      {
+        slug: 'meridian-cli',
+        title: 'Meridian',
+        date: '2025-11-22',
+        image: '',
+        gradient: 'linear-gradient(135deg, #0d1117 0%, #1a2332 50%, #2d5016 100%)',
+        tags: ['Open Source', 'CLI', 'Go'],
+        summary: 'A CLI tool for managing microservice configurations across environments.',
+        body: `<p>Managing configuration drift across dozens of microservices and multiple environments (dev, staging, prod) was a recurring pain point. Meridian was born from that frustration.</p>
+<p>It provides a unified interface for diffing, syncing, and validating configuration files across services. Think of it as <strong>git diff but for your service configs</strong> — it understands YAML, JSON, TOML, and HCL natively.</p>
+<p>Key features include schema validation against OpenAPI specs, environment-aware templating, and a dry-run mode that shows exactly what would change before applying. Built in Go for fast startup and single-binary distribution.</p>
+<p>Open sourced under MIT. Available on GitHub with full documentation and a growing contributor community.</p>`
+      },
+      {
+        slug: 'waveform-visualizer',
+        title: 'Waveform Visualizer',
+        date: '2025-09-05',
+        image: '',
+        gradient: 'linear-gradient(135deg, #1a0a2e 0%, #2d1b4e 50%, #8b2fc9 100%)',
+        tags: ['Creative Coding', 'WebAudio', 'Canvas'],
+        summary: 'An interactive audio visualizer built with the Web Audio API and Canvas.',
+        body: `<p>A weekend experiment that turned into something I keep coming back to. Drop in any audio file and watch it come alive as reactive waveforms, frequency bars, and particle systems.</p>
+<p>Built entirely with vanilla JavaScript using the <strong>Web Audio API</strong> for real-time frequency analysis and <strong>Canvas 2D</strong> for rendering. No frameworks, no dependencies — just the browser APIs.</p>
+<p>The visualizer offers multiple rendering modes: classic waveform, circular spectrum, particle field, and a "liquid" mode that uses noise functions for organic movement. Each mode responds differently to bass, mids, and treble frequencies.</p>
+<p>Performance is optimized with requestAnimationFrame, typed arrays for audio data, and careful canvas state management. Runs at 60fps even on modest hardware.</p>`
+      },
+      {
+        slug: 'reliable-pipelines',
+        title: 'Building Reliable Pipelines at Scale',
+        date: '2025-06-18',
+        image: '',
+        gradient: 'linear-gradient(135deg, #0c1220 0%, #162032 50%, #1e3a5f 100%)',
+        tags: ['Engineering', 'Architecture', 'Writing'],
+        summary: 'Lessons learned from building data pipelines that process billions of events.',
+        body: `<p>After two years of building and operating data pipelines that process billions of events daily, I wrote up the key lessons our team learned the hard way.</p>
+<p>The core insight: <strong>reliability isn't a feature you add — it's a property that emerges from good design decisions made early.</strong> Backpressure handling, idempotency, dead-letter queues, and circuit breakers aren't afterthoughts — they're foundational.</p>
+<p>The article covers our journey from a fragile, monolithic pipeline to a resilient distributed system. Topics include exactly-once processing semantics, the trade-offs between at-least-once and exactly-once delivery, checkpoint strategies, and how we handle schema evolution without downtime.</p>
+<p>Published on the engineering blog and subsequently featured in several engineering newsletters. The most common feedback: "I wish I'd read this before we built ours."</p>`
+      },
+      {
+        slug: 'home-lab-v3',
+        title: 'Home Lab v3',
+        date: '2025-03-12',
+        image: '',
+        gradient: 'linear-gradient(135deg, #1a0f0a 0%, #2d1a0e 50%, #8b4513 100%)',
+        tags: ['Hardware', 'Kubernetes', 'Homelab'],
+        summary: 'Third iteration of my home Kubernetes cluster — now with proper observability.',
+        body: `<p>Version 3 of the home lab. Three Intel NUCs running k3s, a Synology NAS for persistent storage, and a Ubiquiti network stack tying it all together.</p>
+<p>The big upgrade this iteration: <strong>full observability</strong>. Prometheus + Grafana for metrics, Loki for logs, and Tempo for distributed tracing. All self-hosted, all running on the cluster itself. It's turtles all the way down.</p>
+<p>Services running: Pi-hole for DNS, Gitea for private repos, a self-hosted CI runner, Miniflux for RSS, Immich for photos, and various personal projects. Everything defined as Helm charts in a GitOps workflow with Flux CD.</p>
+<p>Total power consumption: ~45W idle. Surprisingly capable for the wattage. The whole stack auto-updates via Renovate bot PRs — I review and merge, Flux deploys. Infrastructure as a hobby.</p>`
+      },
+      {
+        slug: 'type-explorer',
+        title: 'Type Explorer',
+        date: '2024-12-01',
+        image: '',
+        gradient: 'linear-gradient(135deg, #14141a 0%, #1e1e28 50%, #3a3a4a 100%)',
+        tags: ['Design', 'Typography', 'Web'],
+        summary: 'An interactive tool for exploring and comparing typeface pairings.',
+        body: `<p>Born from the frustration of endlessly scrolling through Google Fonts trying to find the right pairing. Type Explorer lets you preview font combinations in real-time with your own content.</p>
+<p>Features include: <strong>side-by-side comparison</strong> of up to four typeface pairings, adjustable scale/weight/spacing, preview in light and dark contexts, and a curated collection of proven pairings to start from.</p>
+<p>The tool loads fonts on-demand from the Google Fonts API, caches them locally, and renders previews using a modular type scale. You can export your chosen pairing as CSS custom properties or a Tailwind config snippet.</p>
+<p>Built with vanilla web technologies — no framework. Accessibility was a priority: full keyboard navigation, screen reader support, and respect for prefers-reduced-motion. Currently used by a few design teams internally.</p>`
+      }
+    ];
+
+    /* ─── Render ─── */
+    const galleryGrid = document.getElementById('gallery-grid');
+    const detailView = document.getElementById('detail-view');
+    const pageHeader = document.querySelector('.page-header');
+
+    function formatDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    function renderGrid() {
+      galleryGrid.innerHTML = '<div class="gallery-grid">' +
+        posts.map(post => `
+          <a href="#${post.slug}" class="gallery-item">
+            <div class="gallery-thumb">
+              ${post.image
+                ? `<img src="${post.image}" alt="${post.title}" loading="lazy">`
+                : `<div class="placeholder" style="background: ${post.gradient}">${post.title.charAt(0)}</div>`
+              }
+            </div>
+            <div class="gallery-meta">
+              <h2 class="gallery-item-title">${post.title}</h2>
+              <time class="gallery-item-date">${formatDate(post.date)}</time>
+            </div>
+          </a>
+        `).join('') +
+      '</div>';
+    }
+
+    function renderDetail(slug) {
+      const post = posts.find(p => p.slug === slug);
+      if (!post) return;
+
+      detailView.innerHTML = `
+        <a href="#" class="detail-back" onclick="navigateBack(event)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="19" y1="12" x2="5" y2="12"></line>
+            <polyline points="12 19 5 12 12 5"></polyline>
+          </svg>
+          Back to Gallery
+        </a>
+        <div class="detail-image">
+          ${post.image
+            ? `<img src="${post.image}" alt="${post.title}">`
+            : `<div class="placeholder" style="background: ${post.gradient}">${post.title.charAt(0)}</div>`
+          }
+        </div>
+        <div class="detail-header">
+          <h1 class="detail-title">${post.title}</h1>
+          <time class="detail-date">${formatDate(post.date)}</time>
+        </div>
+        <div class="detail-tags">
+          ${post.tags.map(tag => `<span class="detail-tag">${tag}</span>`).join('')}
+        </div>
+        <div class="detail-body">
+          ${post.body}
+        </div>
+      `;
+    }
+
+    function navigateBack(e) {
+      e.preventDefault();
+      history.pushState(null, '', 'gallery.html');
+      showGrid();
+    }
+
+    function showGrid() {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      document.title = 'Gallery — Mingyou Xia';
+      detailView.classList.remove('active');
+      setTimeout(() => {
+        galleryGrid.classList.remove('hidden');
+        pageHeader.classList.remove('hidden');
+      }, 100);
+    }
+
+    function showDetail(slug) {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      const post = posts.find(p => p.slug === slug);
+      if (post) document.title = `${post.title} — Mingyou Xia`;
+      galleryGrid.classList.add('hidden');
+      pageHeader.classList.add('hidden');
+      renderDetail(slug);
+      setTimeout(() => {
+        detailView.classList.add('active');
+      }, 100);
+    }
+
+    function handleRoute() {
+      const hash = window.location.hash.slice(1);
+      if (hash && posts.find(p => p.slug === hash)) {
+        showDetail(hash);
+      } else {
+        showGrid();
+      }
+    }
+
+    window.addEventListener('hashchange', handleRoute);
+    window.addEventListener('popstate', handleRoute);
+
+    renderGrid();
+    handleRoute();
+
+    /* ─── Mobile Nav Toggle ─── */
+    (() => {
+      const toggle = document.querySelector('.nav-toggle');
+      const links = document.querySelector('.nav-links');
+      if (!toggle || !links) return;
+      toggle.addEventListener('click', () => {
+        toggle.classList.toggle('open');
+        links.classList.toggle('open');
+      });
+      links.querySelectorAll('a').forEach(a => {
+        a.addEventListener('click', () => {
+          toggle.classList.remove('open');
+          links.classList.remove('open');
+        });
+      });
+    })();
+
+    /* ─── Scroll Reveal ─── */
+    (() => {
+      const observer = new IntersectionObserver(
+        entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('revealed');
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    })();
+  </script>
+</body>
+</html>

@@ -291,11 +291,12 @@
     <span class="footer-text">&copy; 2026 Forest Xia</span>
   </footer>
 
+  <script src="js/site.js"></script>
   <script src="js/posts.js"></script>
   <script>
     /* ─── Mobile filter ─── */
     (function() {
-      const tagCN = { AI:'智', 'Open Source':'源', Web:'网', 'Creative Coding':'创', Gaming:'游', Career:'业', Engineering:'工', Education:'学', Startup:'创' };
+      const tagCN = site.tagCN;
       const tagMap = {};
       posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
       let html = `<li><a href="gallery.html" class="cat-btn"><span class="cn">全</span> All <span class="cat-count">${posts.length}</span></a></li>`;

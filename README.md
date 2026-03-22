@@ -64,13 +64,7 @@ All content is bilingual (English + Chinese). This applies to:
 
 ### Tags
 
-Each tag has a Chinese character mapping defined in `gallery.html` and `post.html`:
-
-```js
-{ AI:'智', 'Open Source':'源', Web:'网', 'Creative Coding':'创', Gaming:'游', Career:'业', Engineering:'工', Education:'学', Startup:'创' }
-```
-
-When adding a new tag, update the `tagCN` object in both files.
+Each tag has a Chinese character mapping defined once in `js/site.js` (`site.tagCN`). Both `gallery.html` and `post.html` read from there — update it in one place.
 
 ### Profile photo (index.html)
 

@@ -85,7 +85,7 @@
     .sidebar .cat-list { list-style: none; }
     .sidebar .cat-btn { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 0; background: none; border: none; font-family: var(--font-body); font-size: 14px; color: var(--ink-wash); cursor: pointer; text-align: left; transition: color 0.3s ease; }
     .sidebar .cat-btn:hover { color: var(--ink); }
-    .sidebar .cat-btn.active { color: var(--ink); font-weight: 500; }
+    .sidebar .cat-btn.active { color: var(--ink); }
     .sidebar .cat-btn .cn { font-family: var(--font-brush); font-size: 18px; line-height: 1; min-width: 20px; }
     .sidebar .cat-btn.active .cn { color: var(--vermillion); }
     .sidebar .cat-count { font-size: 11px; color: var(--ink-faint); margin-left: auto; }
@@ -180,9 +180,10 @@
     <a href="index.html" class="footer-link"><span class="cn">归</span> Home</a>
   </footer>
 
+  <script src="js/site.js"></script>
   <script src="js/posts.js"></script>
   <script>
-    const tagCN = { AI:'智', 'Open Source':'源', Web:'网', 'Creative Coding':'创', Gaming:'游', Career:'业', Engineering:'工', Education:'学', Startup:'创' };
+    const tagCN = site.tagCN;
     let activeCategory = 'all';
 
     function formatDate(d) {

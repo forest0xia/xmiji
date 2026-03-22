@@ -34,7 +34,7 @@ const posts = [
       'content/images/follow-builders.png',
       'content/images/follow-builders-readme.png'
     ],
-    tags: ['AI', 'Open Source'],
+    tags: ['AI', 'Open Source', 'Vibe Coding'],
     body: `
       <p>An AI-powered digest that monitors 25 curated AI builders on X and 5 major podcasts, then delivers personalized summaries — daily or weekly, in English, Chinese, or both.</p>
       <p>一个 AI 驱动的日报工具，追踪 25 位精选 AI 构建者的 X 动态和 5 档播客，生成个性化摘要——支持中英双语。</p>
@@ -55,7 +55,7 @@ const posts = [
       'content/images/ai-career-navigator.png',
       'content/images/ai-career-hero.png'
     ],
-    tags: ['AI', 'Web'],
+    tags: ['AI', 'Open Source', 'Vibe Coding'],
     body: `
       <p>An interactive assessment that measures where you stand in the AI era across six axes: Adoption, Mindset, Craft, Tech Depth, Reliability, and Agents.</p>
       <p>一个交互式评估工具，从六个维度衡量你在 AI 时代的位置：采用度、心态、技能、技术深度、可靠性和智能体能力。</p>
@@ -78,7 +78,7 @@ const posts = [
       'content/images/ai1on1-basics.png',
       'content/images/ai1on1-companies.png'
     ],
-    tags: ['AI', 'Education'],
+    tags: ['AI', 'Open Source', 'Vibe Coding'],
     body: `
       <p>The simplest way to understand those cool-sounding words in the AI world. An interactive, single-file guide covering LLMs, tokens, context, prompts, agents, MCP, RAG, and more.</p>
       <p>用最简单的方式，快速了解 AI 世界里那些听起来很酷的词。单文件交互式指南，涵盖大模型、词元、上下文、提示词、智能体、MCP、RAG 等概念。</p>
@@ -98,7 +98,7 @@ const posts = [
       'content/images/life-countdown-setup.png',
       'content/images/life-countdown-dashboard.png'
     ],
-    tags: ['Web', 'Creative Coding'],
+    tags: ['Open Source', 'Vibe Coding'],
     body: `
       <p>A visualization tool that makes the abstract passage of time feel concrete. See your life as a progress bar, a year matrix, remaining meals, projected visits with parents.</p>
       <p>一个让抽象的时间流逝变得具体可感的可视化工具。将你的人生化为进度条、年份矩阵、剩余餐数、与父母的见面次数。</p>
@@ -135,7 +135,7 @@ const posts = [
     titleCn: '亚马逊六年',
     date: '2025-03-01',
     image: 'content/images/aws-career.png',
-    tags: ['Career', 'Engineering'],
+    tags: ['Career'],
     body: `
       <p>Three teams, three problem spaces, one constant: I don't just build features — I define how systems should work, set the standards others ship against, and make sure the architecture holds when the next ten teams build on top of it.</p>
       <p>三个团队，三个不同的领域，但我做的事情本质上是一样的：不只是写功能，而是定义系统该怎么长、标准该怎么立，确保后面十个团队在上面盖楼的时候地基不会晃。</p>

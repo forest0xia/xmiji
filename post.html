@@ -200,6 +200,68 @@
     .post-body li { margin-bottom: 8px; }
     .post-body hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
     .post-body blockquote { border-left: 3px solid var(--vermillion); padding-left: 20px; margin: 20px 0; color: var(--ink-wash); font-style: italic; }
+    .post-body h2, .post-body h3 { scroll-margin-top: 80px; }
+
+    /* ─── Table of Contents (Sidebar) ─── */
+    .toc-sidebar {
+      display: none; position: fixed; top: 120px;
+      left: calc(50% + 390px); width: 180px;
+      max-height: calc(100vh - 200px); overflow-y: auto;
+      scrollbar-width: none; z-index: 10;
+    }
+    .toc-sidebar::-webkit-scrollbar { display: none; }
+    .toc-sidebar.visible { display: block; }
+    .toc-sidebar .toc-title {
+      font-family: var(--font-display); font-size: 12px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-faint);
+      margin-bottom: 12px; display: flex; align-items: baseline; gap: 6px;
+    }
+    .toc-sidebar .toc-title .cn { font-family: var(--font-brush); font-size: 16px; text-transform: none; letter-spacing: 0; }
+    .toc-sidebar .toc-list { list-style: none; border-left: 1px solid var(--border); }
+    .toc-sidebar .toc-item {
+      padding: 4px 0 4px 14px; margin-left: -1px;
+      border-left: 2px solid transparent;
+      transition: border-color 0.3s ease;
+    }
+    .toc-sidebar .toc-item.depth-3 { padding-left: 26px; }
+    .toc-sidebar .toc-item a {
+      font-size: 12.5px; color: var(--ink-wash); text-decoration: none;
+      line-height: 1.5; transition: color 0.3s ease; display: block;
+    }
+    .toc-sidebar .toc-item a:hover { color: var(--ink); }
+    .toc-sidebar .toc-item.active { border-left-color: var(--vermillion); }
+    .toc-sidebar .toc-item.active a { color: var(--ink); }
+    @media (max-width: 1199px) { .toc-sidebar.visible { display: none; } }
+
+    /* ─── Table of Contents (Mobile) ─── */
+    .toc-mobile {
+      display: none; margin-bottom: 28px;
+      border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+    }
+    .toc-mobile.visible { display: block; }
+    .toc-mobile-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: 12px 16px; background: none; border: none;
+      font-family: var(--font-display); font-size: 14px; font-weight: 500;
+      color: var(--ink-light); cursor: pointer;
+    }
+    .toc-mobile-toggle .cn { font-family: var(--font-brush); font-size: 18px; }
+    .toc-mobile-toggle svg {
+      width: 14px; height: 14px; color: var(--ink-faint);
+      transition: transform 0.3s ease;
+    }
+    .toc-mobile.open .toc-mobile-toggle svg { transform: rotate(180deg); }
+    .toc-mobile .toc-list {
+      list-style: none; padding: 0 16px 0; max-height: 0;
+      overflow: hidden; transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .toc-mobile.open .toc-list { max-height: 500px; padding-bottom: 12px; }
+    .toc-mobile .toc-item { padding: 6px 0; border-bottom: 1px solid var(--border); }
+    .toc-mobile .toc-item:last-child { border-bottom: none; }
+    .toc-mobile .toc-item.depth-3 { padding-left: 16px; }
+    .toc-mobile .toc-item a { font-size: 14px; color: var(--ink-wash); text-decoration: none; transition: color 0.3s ease; }
+    .toc-mobile .toc-item a:hover { color: var(--ink); }
+    @media (min-width: 1200px) { .toc-mobile.visible { display: none; } }
 
     /* ─── Comments ─── */
     .comments {
@@ -294,6 +356,7 @@
     </div>
   </div>
 
+  <nav class="toc-sidebar" id="toc-sidebar"></nav>
   <article class="post" id="post"></article>
 
   <footer class="footer">
@@ -385,6 +448,13 @@
         <h1 class="post-title fade fade-d1">${titleDisplay}</h1>
         <time class="post-date fade fade-d2">${formatDate(post.date)}</time>
         <div class="post-tags fade fade-d2">${post.tags.map(t => `<a href="gallery.html?cat=${encodeURIComponent(t)}" class="post-tag">${t}</a>`).join('')}</div>
+        <nav class="toc-mobile fade fade-d3" id="toc-mobile">
+          <button class="toc-mobile-toggle" onclick="this.parentElement.classList.toggle('open')">
+            <span><span class="cn">目</span> Contents</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          <ul class="toc-list"></ul>
+        </nav>
         <div class="post-body fade fade-d3">${md(post.body)}</div>
 
         <nav class="post-nav fade fade-d4">
@@ -403,6 +473,49 @@
         a.target = '_blank';
         a.rel = 'noopener';
       });
+
+      // Table of contents
+      (function() {
+        const postBody = document.querySelector('.post-body');
+        const headings = postBody.querySelectorAll('h2, h3');
+        if (headings.length < 2) return;
+
+        const items = [];
+        headings.forEach((h, i) => {
+          const id = 'toc-' + i;
+          h.id = id;
+          items.push({ id, text: h.textContent, depth: h.tagName === 'H3' ? 3 : 2 });
+        });
+
+        const tocHTML = items.map(item =>
+          `<li class="toc-item depth-${item.depth}"><a href="#${item.id}">${item.text}</a></li>`
+        ).join('');
+
+        // Desktop sidebar
+        const sidebar = document.getElementById('toc-sidebar');
+        sidebar.innerHTML = '<div class="toc-title"><span class="cn">目</span> Contents</div><ul class="toc-list">' + tocHTML + '</ul>';
+        sidebar.classList.add('visible');
+
+        // Mobile inline
+        const mobile = document.getElementById('toc-mobile');
+        mobile.querySelector('.toc-list').innerHTML = tocHTML;
+        mobile.classList.add('visible');
+
+        // Active heading tracking
+        function updateActive() {
+          const scrollY = window.scrollY + 140;
+          let activeId = items[0].id;
+          for (const item of items) {
+            const el = document.getElementById(item.id);
+            if (el && el.offsetTop <= scrollY) activeId = item.id;
+          }
+          sidebar.querySelectorAll('.toc-item').forEach(el => {
+            el.classList.toggle('active', el.querySelector('a').getAttribute('href') === '#' + activeId);
+          });
+        }
+        window.addEventListener('scroll', updateActive, { passive: true });
+        updateActive();
+      })();
 
       // Giscus comments
       const giscusScript = document.createElement('script');

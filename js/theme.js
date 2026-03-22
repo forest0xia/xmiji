@@ -90,9 +90,9 @@ function applyTheme(name) {
 }
 
 function toggleTheme() {
-  const current = localStorage.getItem('theme') || 'dark';
+  const current = localStorage.getItem('theme') || 'light';
   applyTheme(current === 'dark' ? 'light' : 'dark');
 }
 
 // Apply saved theme immediately
-applyTheme(localStorage.getItem('theme') || 'dark');
+applyTheme(localStorage.getItem('theme') || 'light');

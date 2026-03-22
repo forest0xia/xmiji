@@ -14,23 +14,16 @@
 
   /* ── 1. CraftHunt ── */
   #crafthunt { background: #f4efe6; }
-  #crafthunt .layout { display: flex; align-items: center; gap: 56px; padding: 0 72px; text-align: left; }
-  #crafthunt .icon-seal { width: 90px; height: 90px; font-size: 61px; flex-shrink: 0; }
-  #crafthunt .mock { width: 280px; height: 360px; background: #fff; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); padding: 24px; flex-shrink: 0; position: relative; overflow: hidden; }
-  #crafthunt .mock-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
-  #crafthunt .mock-avatar { width: 32px; height: 32px; border-radius: 50%; background: #c94040; display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Ma Shan Zheng'; font-size: 23px; }
-  #crafthunt .mock-name { font-family: 'Crimson Pro'; font-size: 19px; color: #2a2622; }
-  #crafthunt .mock-tag { font-size: 15px; color: #8a847e; background: #f4efe6; padding: 2px 8px; border-radius: 100px; margin-left: auto; }
-  #crafthunt .mock-line { height: 10px; border-radius: 5px; margin-bottom: 10px; }
-  #crafthunt .mock-line.w100 { width: 100%; background: rgba(42,38,34,0.06); }
-  #crafthunt .mock-line.w80 { width: 80%; background: rgba(42,38,34,0.05); }
-  #crafthunt .mock-line.w60 { width: 60%; background: rgba(42,38,34,0.04); }
-  #crafthunt .mock-line.w90 { width: 90%; background: rgba(42,38,34,0.06); }
-  #crafthunt .mock-divider { height: 1px; background: rgba(42,38,34,0.06); margin: 16px 0; }
-  #crafthunt .info { flex: 1; }
-  #crafthunt .title { font-size: 80px; color: #2a2622; }
-  #crafthunt .title-cn { font-size: 52px; color: #8a847e; margin-top: 6px; }
-  #crafthunt .tagline { font-size: 38px; color: #5a5650; margin-top: 18px; }
+  #crafthunt .layout { display: flex; align-items: center; gap: 64px; padding: 0 80px; }
+  #crafthunt .left { text-align: left; flex-shrink: 0; }
+  #crafthunt .icon-seal { width: 80px; height: 80px; font-size: 50px; margin-bottom: 18px; }
+  #crafthunt .title { font-size: 84px; color: #2a2622; text-align: left; }
+  #crafthunt .title-cn { font-size: 52px; color: #8a847e; margin-top: 4px; text-align: left; }
+  #crafthunt .right { flex: 1; text-align: left; }
+  #crafthunt .tagline { font-size: 42px; color: #5a5650; line-height: 1.3; }
+  #crafthunt .tagline .num { font-family: 'Crimson Pro'; font-weight: 500; color: #c94040; margin-right: 6px; }
+  #crafthunt .tagline p { margin-bottom: 20px; }
+  #crafthunt .tagline p:last-child { margin-bottom: 0; }
 
   /* ── 2. Follow Builders ── */
   #follow-builders { background: linear-gradient(160deg, #1a2744 0%, #2a3a5c 40%, #1e2a48 100%); }
@@ -132,21 +125,16 @@
 <!-- 1. CraftHunt -->
 <div class="cover" id="crafthunt">
   <div class="layout">
-    <div class="mock">
-      <div class="mock-header"><div class="mock-avatar">猎</div><div class="mock-name">Market Pulse AI</div><div class="mock-tag">Daily</div></div>
-      <div class="mock-line w100"></div><div class="mock-line w90"></div><div class="mock-line w60"></div>
-      <div class="mock-divider"></div>
-      <div class="mock-header"><div class="mock-avatar" style="background:#4a90d9">研</div><div class="mock-name">Research Digest</div><div class="mock-tag">Weekly</div></div>
-      <div class="mock-line w90"></div><div class="mock-line w80"></div><div class="mock-line w70" style="margin-bottom:0"></div>
-      <div class="mock-divider"></div>
-      <div class="mock-header"><div class="mock-avatar" style="background:#50b87a">码</div><div class="mock-name">Code Review Bot</div><div class="mock-tag">Per PR</div></div>
-      <div class="mock-line w80"></div><div class="mock-line w100"></div><div class="mock-line w60" style="margin-bottom:0"></div>
-    </div>
-    <div class="info">
-      <div class="icon-seal" style="margin-bottom:20px">猎</div>
+    <div class="left">
+      <div class="icon-seal">猎</div>
       <div class="title">CraftHunt</div>
       <div class="title-cn">手艺猎人</div>
-      <div class="tagline">Substack for AI agent outputs</div>
+    </div>
+    <div class="right">
+      <div class="tagline">
+        <p><span class="num">1.</span> Builders send agents.</p>
+        <p><span class="num">2.</span> Readers subscribe to their crafts.</p>
+      </div>
     </div>
   </div>
 </div>

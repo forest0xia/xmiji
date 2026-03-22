@@ -4,9 +4,6 @@
   "titleCn": "心域创新 · 创业岁月",
   "date": "2018-11-01",
   "image": "content/images/xinyu-innovation.png",
-  "tags": [
-    "Career",
-    "Startup"
-  ],
-  "body": "<p>Founded and scaled a custom apparel platform in Shenzhen, pivoting from high-end bespoke designs to on-demand print customization. Served over 100,000 customers bringing their creative visions to life — and built the entire end-to-end system myself: design tooling, ordering, fulfillment, logistics, customer service.</p>\n<p>在深圳创立并发展了一个定制服装平台，从高端定制设计转型为按需印花定制。服务超过 10 万名客户，帮助他们将创意变为现实——从设计工具、下单、生产、物流到客服，整个系统都是我一个人搭建的。</p>\n<p>Java backend on SSH, web apps with Vue and Angular, a T-shirt design tool, a word cloud generator, an e-commerce iOS app. Four roles on my LinkedIn for the same company — founder, PM, backend dev, frontend dev, iOS dev. Startup life means your title is \"whatever needs doing right now.\"</p>\n<p>SSH 框架的 Java 后端，Vue 和 Angular 的 Web 应用，T恤设计工具、词云生成器、电商 iOS 应用。LinkedIn 上同一家公司挂了四个职位——创始人、产品经理、后端、前端、iOS。创业就是：什么缺人你就是什么。</p>"
+  "tags": ["Career", "Startup"],
+  "body": "<p>Founded and scaled a custom apparel platform in Shenzhen, pivoting from high-end bespoke designs to on-demand print customization. Served over 100,000 customers bringing their creative visions to life — and built the entire end-to-end system myself.</p>\n\n<h3>What I built</h3>\n<ul>\n<li>Java backend on SSH framework</li>\n<li>Web apps with Vue and Angular</li>\n<li>T-shirt design tool and word cloud generator</li>\n<li>E-commerce iOS app</li>\n<li>Full ordering, fulfillment, logistics, and customer service pipeline</li>\n</ul>\n\n<p>Four roles on my LinkedIn for the same company — founder, PM, backend dev, frontend dev, iOS dev. Startup life means your title is \"whatever needs doing right now.\"</p>\n\n<hr>\n\n<h3>这段经历</h3>\n<p>在深圳从零开始做了一个定制服装平台，从高端定制设计起步，后来转型做按需印花，前后服务了十万多客户。整个系统都是我一个人搭的——Java 后端、Vue 和 Angular 的前端、T恤设计工具、词云生成器、iOS 电商 App，从下单到生产到物流到客服，全链路一手包办。</p>\n<p>LinkedIn 上同一家公司挂了四个职位。创业嘛，什么缺人你就是什么。</p>"
 }

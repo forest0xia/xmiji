@@ -100,12 +100,13 @@
     .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
     .gallery-item { display: block; -webkit-tap-highlight-color: transparent; }
     .gallery-item.filtered-out { display: none; }
-    .gallery-thumb { position: relative; aspect-ratio: 3/4; overflow: hidden; background: rgba(255,255,255,0.3); box-shadow: 0 3px 20px rgba(42,38,34,0.06); border: 1px solid rgba(255,255,255,0.5); transition: border-color 0.4s ease, box-shadow 0.4s ease; }
+    .gallery-thumb { position: relative; aspect-ratio: 3/2; overflow: hidden; background: rgba(255,255,255,0.3); box-shadow: 0 3px 20px rgba(42,38,34,0.06); border: 1px solid rgba(255,255,255,0.5); transition: border-color 0.4s ease, box-shadow 0.4s ease; }
     .gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
     .gallery-item:hover .gallery-thumb { border-color: rgba(201,64,64,0.12); box-shadow: 0 6px 28px rgba(42,38,34,0.1); }
     .gallery-meta { padding: 12px 0 0; }
     .gallery-item-title { font-family: var(--font-display); font-size: 17px; font-weight: 500; color: var(--ink); transition: color 0.3s ease; }
     .gallery-item:hover .gallery-item-title { color: var(--vermillion-muted); }
+    .gallery-item-title-cn { font-family: var(--font-brush); font-size: 14px; font-weight: 400; color: var(--ink-wash); margin-left: 4px; }
     .gallery-item-date { font-size: 11px; font-weight: 300; color: var(--ink-faint); margin-top: 2px; }
 
     /* ─── Footer ─── */
@@ -142,7 +143,7 @@
 </head>
 
 <body>
-  <div class="bg-ink"><img src="sample-images/31767d76024f558a68407c3de4907ee8.jpg" alt="" aria-hidden="true"></div>
+  <div class="bg-ink"><img src="assets/bg/gallery.jpg" alt="" aria-hidden="true"></div>
 
   <div class="top-bar">
     <a href="index.html" class="top-seal">夏</a>
@@ -179,9 +180,9 @@
     <a href="index.html" class="footer-link"><span class="cn">归</span> Home</a>
   </footer>
 
-  <script src="posts.js"></script>
+  <script src="js/posts.js"></script>
   <script>
-    const tagCN = { Photography:'影', Cities:'城', 'Open Source':'源', CLI:'令', 'Creative Coding':'创', Engineering:'工', Writing:'文', Hardware:'器', Design:'设' };
+    const tagCN = { AI:'智', 'Open Source':'源', Web:'网', 'Creative Coding':'创', Gaming:'游', Career:'业', Engineering:'工', Education:'学', Startup:'创' };
     let activeCategory = 'all';
 
     function formatDate(d) {
@@ -226,7 +227,7 @@
         <a href="post.html?id=${p.slug}" class="gallery-item" data-tags='${JSON.stringify(p.tags)}'>
           <div class="gallery-thumb"><img src="${p.image}" alt="${p.title}" loading="lazy"></div>
           <div class="gallery-meta">
-            <h2 class="gallery-item-title">${p.title}</h2>
+            <h2 class="gallery-item-title">${p.title}${p.titleCn ? ` <span class="gallery-item-title-cn">${p.titleCn}</span>` : ''}</h2>
             <time class="gallery-item-date">${formatDate(p.date)}</time>
           </div>
         </a>`).join('');

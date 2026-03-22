@@ -89,6 +89,88 @@
     }
     .post-image img { width: 100%; display: block; }
 
+    /* ─── Image Carousel ─── */
+    .post-carousel {
+      position: relative; width: 100%; margin-bottom: 36px;
+    }
+    .post-carousel-track {
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      gap: 0;
+    }
+    .post-carousel-track::-webkit-scrollbar { display: none; }
+    .post-carousel-slide {
+      flex: 0 0 100%; scroll-snap-align: start;
+      box-shadow: 0 6px 32px rgba(42,38,34,0.08);
+      border: 1px solid rgba(255,255,255,0.5);
+      overflow: hidden; cursor: pointer;
+    }
+    .post-carousel-slide img { width: 100%; display: block; }
+    .post-carousel-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(4px);
+      color: var(--ink); cursor: pointer; display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      opacity: 0; transition: opacity 0.2s ease;
+    }
+    .post-carousel:hover .post-carousel-nav { opacity: 1; }
+    .post-carousel-nav.prev { left: 12px; }
+    .post-carousel-nav.next { right: 12px; }
+    .post-carousel-nav svg { width: 16px; height: 16px; }
+    .post-carousel-dots {
+      display: flex; justify-content: center; gap: 8px; margin-top: 14px;
+    }
+    .post-carousel-dot {
+      width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0;
+      background: var(--ink-faint); opacity: 0.4; cursor: pointer;
+      transition: opacity 0.3s ease, background 0.3s ease;
+    }
+    .post-carousel-dot.active { opacity: 1; background: var(--vermillion); }
+
+    /* ─── Fullscreen Gallery ─── */
+    .fs-gallery {
+      position: fixed; inset: 0; z-index: 300;
+      background: rgba(20, 18, 16, 0.95);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      will-change: opacity;
+    }
+    .fs-gallery.open { opacity: 1; pointer-events: auto; }
+    .fs-gallery img {
+      max-width: 92vw; max-height: 88vh; object-fit: contain;
+      border-radius: 4px;
+      transform: scale(0.95);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+    .fs-gallery.open img { transform: scale(1); }
+    .fs-gallery-close {
+      position: absolute; top: 20px; right: 20px;
+      width: 40px; height: 40px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.12); color: #f4efe6; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s ease;
+    }
+    .fs-gallery-close:hover { background: rgba(255,255,255,0.2); }
+    .fs-gallery-close svg { width: 20px; height: 20px; }
+    .fs-gallery-nav {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      width: 48px; height: 48px; border-radius: 50%; border: none;
+      background: rgba(255,255,255,0.1); color: #f4efe6; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s ease;
+    }
+    .fs-gallery-nav:hover { background: rgba(255,255,255,0.2); }
+    .fs-gallery-nav.prev { left: 20px; }
+    .fs-gallery-nav.next { right: 20px; }
+    .fs-gallery-nav svg { width: 20px; height: 20px; }
+    .fs-gallery-counter {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-size: 14px; color: rgba(244,239,230,0.5); font-family: var(--font-body);
+    }
+
     .post-title {
       font-family: var(--font-display);
       font-weight: 500;
@@ -106,7 +188,9 @@
       font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase;
       padding: 5px 16px; background: rgba(255,255,255,0.4); backdrop-filter: blur(8px);
       border: 1px solid rgba(255,255,255,0.5); border-radius: 100px; color: var(--ink-light);
+      transition: border-color 0.3s ease, color 0.3s ease; text-decoration: none;
     }
+    .post-tag:hover { border-color: rgba(201,64,64,0.3); color: var(--vermillion-muted); }
 
     .post-body {
       font-size: 17px; font-weight: 300; line-height: 1.9; color: var(--ink-light);
@@ -181,7 +265,7 @@
 </head>
 
 <body>
-  <div class="bg-ink"><img src="sample-images/d6ce0846b084b4db94e8886472d42db2.jpg" alt="" aria-hidden="true"></div>
+  <div class="bg-ink"><img src="assets/bg/post.jpg" alt="" aria-hidden="true"></div>
 
   <div class="top-bar">
     <a href="index.html" class="top-seal">夏</a>
@@ -207,11 +291,11 @@
     <span class="footer-text">&copy; 2026 Forest Xia</span>
   </footer>
 
-  <script src="posts.js"></script>
+  <script src="js/posts.js"></script>
   <script>
     /* ─── Mobile filter ─── */
     (function() {
-      const tagCN = { Photography:'影', Cities:'城', 'Open Source':'源', CLI:'令', 'Creative Coding':'创', Engineering:'工', Writing:'文', Hardware:'器', Design:'设' };
+      const tagCN = { AI:'智', 'Open Source':'源', Web:'网', 'Creative Coding':'创', Gaming:'游', Career:'业', Engineering:'工', Education:'学', Startup:'创' };
       const tagMap = {};
       posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
       let html = `<li><a href="gallery.html" class="cat-btn"><span class="cn">全</span> All <span class="cat-count">${posts.length}</span></a></li>`;
@@ -248,11 +332,29 @@
       const prev = posts[postIdx + 1] || null; // older
       const next = posts[postIdx - 1] || null; // newer
 
+      // Build image gallery or single image
+      const imgs = post.images && post.images.length > 0 ? post.images : [post.image];
+      let imageHTML;
+      if (imgs.length === 1) {
+        imageHTML = `<div class="post-image fade"><img src="${imgs[0]}" alt="${post.title}"></div>`;
+      } else {
+        const arrowSvgL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
+        const arrowSvgR = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>';
+        imageHTML = `<div class="post-carousel fade">
+          <button class="post-carousel-nav prev" data-dir="-1">${arrowSvgL}</button>
+          <button class="post-carousel-nav next" data-dir="1">${arrowSvgR}</button>
+          <div class="post-carousel-track">${imgs.map((src,i) => `<div class="post-carousel-slide" data-idx="${i}"><img src="${src}" alt="${post.title} ${i+1}"></div>`).join('')}</div>
+          <div class="post-carousel-dots">${imgs.map((_,i) => `<button class="post-carousel-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('')}</div>
+        </div>`;
+      }
+
+      const titleDisplay = post.titleCn ? `${post.title} <span style="font-family:var(--font-brush);font-size:0.7em;color:var(--ink-wash);margin-left:8px">${post.titleCn}</span>` : post.title;
+
       document.getElementById('post').innerHTML = `
-        <div class="post-image fade"><img src="${post.image}" alt="${post.title}"></div>
-        <h1 class="post-title fade fade-d1">${post.title}</h1>
+        ${imageHTML}
+        <h1 class="post-title fade fade-d1">${titleDisplay}</h1>
         <time class="post-date fade fade-d2">${formatDate(post.date)}</time>
-        <div class="post-tags fade fade-d2">${post.tags.map(t => `<span class="post-tag">${t}</span>`).join('')}</div>
+        <div class="post-tags fade fade-d2">${post.tags.map(t => `<a href="gallery.html?cat=${encodeURIComponent(t)}" class="post-tag">${t}</a>`).join('')}</div>
         <div class="post-body fade fade-d3">${post.body}</div>
 
         <nav class="post-nav fade fade-d4">
@@ -299,7 +401,90 @@
       giscusScript.crossOrigin = 'anonymous';
       giscusScript.async = true;
       document.getElementById('giscus-container').appendChild(giscusScript);
+
+      // Carousel interaction
+      const track = document.querySelector('.post-carousel-track');
+      const dots = document.querySelectorAll('.post-carousel-dot');
+      const navBtns = document.querySelectorAll('.post-carousel-nav');
+
+      function scrollToSlide(idx) {
+        if (!track) return;
+        track.scrollTo({ left: idx * track.offsetWidth, behavior: 'smooth' });
+      }
+      function currentIdx() {
+        return track ? Math.round(track.scrollLeft / track.offsetWidth) : 0;
+      }
+
+      if (track && dots.length > 0) {
+        track.addEventListener('scroll', () => {
+          const idx = currentIdx();
+          dots.forEach((d,i) => d.classList.toggle('active', i === idx));
+        });
+        dots.forEach(d => d.addEventListener('click', () => scrollToSlide(+d.dataset.idx)));
+        navBtns.forEach(b => b.addEventListener('click', () => {
+          const total = imgs.length;
+          let next = currentIdx() + (+b.dataset.dir);
+          if (next < 0) next = total - 1;
+          if (next >= total) next = 0;
+          scrollToSlide(next);
+        }));
+
+        // Click slide to open fullscreen
+        document.querySelectorAll('.post-carousel-slide').forEach(s => {
+          s.addEventListener('click', () => openFsGallery(+s.dataset.idx));
+        });
+      }
+
+      // Fullscreen gallery
+      const fsEl = document.getElementById('fsGallery');
+      const fsImg = document.getElementById('fsImg');
+      const fsCounter = document.getElementById('fsCounter');
+      let fsIdx = 0;
+
+      function openFsGallery(idx) {
+        fsIdx = idx;
+        updateFs();
+        fsEl.classList.add('open');
+      }
+      function closeFsGallery() { fsEl.classList.remove('open'); }
+      function updateFs() {
+        fsImg.src = imgs[fsIdx];
+        fsCounter.textContent = (fsIdx + 1) + ' / ' + imgs.length;
+      }
+      function fsNav(dir) {
+        fsIdx += dir;
+        if (fsIdx < 0) fsIdx = imgs.length - 1;
+        if (fsIdx >= imgs.length) fsIdx = 0;
+        updateFs();
+      }
+
+      fsEl.querySelector('.fs-gallery-close').addEventListener('click', closeFsGallery);
+      fsEl.querySelectorAll('.fs-gallery-nav').forEach(b => {
+        b.addEventListener('click', e => { e.stopPropagation(); fsNav(+b.dataset.dir); });
+      });
+      fsEl.addEventListener('click', e => { if (e.target === fsEl) closeFsGallery(); });
+      document.addEventListener('keydown', e => {
+        if (!fsEl.classList.contains('open')) return;
+        if (e.key === 'Escape') closeFsGallery();
+        if (e.key === 'ArrowLeft') fsNav(-1);
+        if (e.key === 'ArrowRight') fsNav(1);
+      });
     }
   </script>
+
+  <!-- Fullscreen gallery -->
+  <div class="fs-gallery" id="fsGallery">
+    <button class="fs-gallery-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="fs-gallery-nav prev" data-dir="-1" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <img id="fsImg" src="" alt="">
+    <button class="fs-gallery-nav next" data-dir="1" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+    <span class="fs-gallery-counter" id="fsCounter"></span>
+  </div>
 </body>
 </html>

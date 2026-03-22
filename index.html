@@ -77,6 +77,7 @@
 
     /* ─── Profile ─── */
     .profile-photo {
+      position: relative;
       width: 110px;
       height: 110px;
       border-radius: 50%;
@@ -84,6 +85,7 @@
       margin: 0 auto 28px;
       box-shadow: 0 4px 24px rgba(42, 38, 34, 0.1);
       border: 3px solid rgba(255, 255, 255, 0.6);
+      cursor: pointer;
     }
 
     .profile-photo img {
@@ -92,17 +94,53 @@
       object-fit: cover;
     }
 
-    .profile-photo .placeholder {
-      width: 100%;
-      height: 100%;
+    .profile-photo .name-cn {
+      position: absolute;
+      inset: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: var(--vermillion);
-      color: var(--paper);
+      background: rgba(42, 38, 34, 0.4);
       font-family: var(--font-brush);
-      font-size: 44px;
+      font-size: 36px;
+      color: var(--paper);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      margin: 0;
     }
+
+    .profile-photo:hover .name-cn { opacity: 1; }
+
+    /* ─── Photo Lightbox ─── */
+    .lightbox {
+      position: fixed; inset: 0; z-index: 300;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(42, 38, 34, 0.88);
+      cursor: pointer;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      will-change: opacity;
+    }
+    .lightbox.open { opacity: 1; pointer-events: auto; }
+    .lightbox img {
+      max-width: 90vw; max-height: 85vh;
+      border-radius: 6px;
+      box-shadow: 0 12px 60px rgba(0,0,0,0.3);
+      transform: scale(0.92);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+    .lightbox.open img { transform: scale(1); }
+    .lightbox-close {
+      position: absolute; top: 20px; right: 20px;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(255,255,255,0.15); border: none; border-radius: 50%;
+      color: var(--paper); cursor: pointer;
+      transition: background 0.2s ease;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-close svg { width: 18px; height: 18px; }
 
     .name {
       font-family: var(--font-display);
@@ -110,13 +148,6 @@
       font-size: 38px;
       line-height: 1.1;
       letter-spacing: -0.01em;
-      margin-bottom: 6px;
-    }
-
-    .name-cn {
-      font-family: var(--font-brush);
-      font-size: 20px;
-      color: var(--ink-wash);
       margin-bottom: 6px;
     }
 
@@ -250,27 +281,26 @@
 
 <body>
   <div class="bg-ink">
-    <img src="sample-images/4a3c705c6ce98adc323df265419be00b.jpg" alt="" aria-hidden="true">
+    <img src="assets/bg/index.jpg" alt="" aria-hidden="true">
   </div>
 
   <main class="page">
     <div class="card">
-      <!-- Profile photo — replace placeholder with: <img src="assets/profile.jpg" alt="Forest Xia"> -->
-      <div class="profile-photo fade">
-        <div class="placeholder">夏</div>
+      <div class="profile-photo fade" id="profilePhoto">
+        <img src="assets/profile.jpg" alt="Forest Xia">
+        <span class="name-cn">夏</span>
       </div>
 
-      <p class="name-cn fade">夏</p>
       <h1 class="name fade">Forest Xia</h1>
       <p class="subtitle fade">Software engineer, builder, tinkerer</p>
 
       <div class="bio fade">
-        <p>Software engineer at AWS by day, builder of side projects by night. UC Berkeley CS grad. I've shipped everything from cloud infrastructure to Dota 2 bots. I like making things that work well and look good doing it.</p>
+        <p>Software engineer, builder with AI, and startup founder. UC Berkeley CS. I enjoy building tools, apps and distributed systems at scale. The best dopamine hit I know is watching something the team built go live.</p>
       </div>
 
       <ul class="info-list fade">
         <li><span class="info-label">Location</span> Seattle, WA</li>
-        <li><span class="info-label">Focus</span> Cloud architecture, AI, game bots, web apps</li>
+        <li><span class="info-label">Focus</span> Cloud architecture, AI, agents, games, apps</li>
         <li><span class="info-label">GitHub</span> <a href="https://github.com/forest0xia" target="_blank" rel="noopener">github.com/forest0xia</a></li>
         <li><span class="info-label">LinkedIn</span> <a href="https://www.linkedin.com/in/forest-xia-38454479/" target="_blank" rel="noopener">Forest Xia</a></li>
       </ul>
@@ -282,5 +312,19 @@
   </main>
 
   <div class="seal">夏</div>
+
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img src="assets/profile.jpg" alt="Forest Xia">
+  </div>
+
+  <script>
+    const photo = document.getElementById('profilePhoto');
+    const lightbox = document.getElementById('lightbox');
+    photo.addEventListener('click', () => lightbox.classList.add('open'));
+    lightbox.addEventListener('click', () => lightbox.classList.remove('open'));
+  </script>
 </body>
 </html>

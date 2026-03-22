@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loading... — Forest Xia</title>
+  <link rel="icon" href="favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap" rel="stylesheet">
@@ -295,8 +297,7 @@
   <script src="js/posts.js"></script>
   <script>
     /* ─── Mobile filter ─── */
-    (function() {
-      const tagCN = site.tagCN;
+    const tagCN = site.tagCN;
       const tagMap = {};
       posts.forEach(p => p.tags.forEach(t => { tagMap[t] = (tagMap[t]||0)+1; }));
       let html = `<li><a href="gallery.html" class="cat-btn"><span class="cn">全</span> All <span class="cat-count">${posts.length}</span></a></li>`;
@@ -309,19 +310,17 @@
       const overlay = document.getElementById('filterOverlay');
       document.getElementById('filterToggle').addEventListener('click', () => overlay.classList.toggle('open'));
       overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
-    })();
-  </script>
-  <script>
-    const slug = new URLSearchParams(window.location.search).get('id');
-    const postIdx = posts.findIndex(p => p.slug === slug);
-    const post = posts[postIdx];
 
-    if (!post) {
-      document.getElementById('post').innerHTML = '<p>Post not found.</p>';
-    } else {
+      /* ─── Post ─── */
+      const slug = new URLSearchParams(window.location.search).get('id');
+      const postIdx = posts.findIndex(p => p.slug === slug);
+      const post = posts[postIdx];
+
+      if (!post) {
+        document.getElementById('post').innerHTML = '<p>Post not found.</p>';
+      } else {
+
       document.title = `${post.title} — Forest Xia`;
-
-      // Set meta description
       const meta = document.querySelector('meta[name="description"]');
       if (meta) meta.content = post.body.replace(/<[^>]*>/g, '').slice(0, 160);
 
@@ -329,11 +328,9 @@
         return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
       }
 
-      // Previous / Next posts
-      const prev = posts[postIdx + 1] || null; // older
-      const next = posts[postIdx - 1] || null; // newer
+      const prev = posts[postIdx + 1] || null;
+      const next = posts[postIdx - 1] || null;
 
-      // Build image gallery or single image
       const imgs = post.images && post.images.length > 0 ? post.images : [post.image];
       let imageHTML;
       if (imgs.length === 1) {
@@ -369,27 +366,19 @@
         </div>
       `;
 
-      /*
-       * ╔══════════════════════════════════════════════════════╗
-       * ║  GISCUS SETUP — powered by GitHub Discussions       ║
-       * ║                                                      ║
-       * ║  1. Push site to a PUBLIC GitHub repo                ║
-       * ║  2. Settings → Features → enable Discussions         ║
-       * ║  3. Install: github.com/apps/giscus                  ║
-       * ║  4. Go to giscus.app → enter repo → get config       ║
-       * ║  5. Replace values below                              ║
-       * ║                                                      ║
-       * ║  Giscus handles login/comment UI automatically:      ║
-       * ║  - Not logged in → shows "Sign in with GitHub"       ║
-       * ║  - Logged in → shows comment box + reactions          ║
-       * ╚══════════════════════════════════════════════════════╝
-       */
+      // Open external links in new tab
+      document.querySelectorAll('.post-body a[href^="http"]').forEach(a => {
+        a.target = '_blank';
+        a.rel = 'noopener';
+      });
+
+      // Giscus comments
       const giscusScript = document.createElement('script');
       giscusScript.src = 'https://giscus.app/client.js';
       giscusScript.setAttribute('data-repo', 'forest0xia/xmiji');
-      giscusScript.setAttribute('data-repo-id', '');
+      giscusScript.setAttribute('data-repo-id', 'R_kgDORtJgRQ');
       giscusScript.setAttribute('data-category', 'Comments');
-      giscusScript.setAttribute('data-category-id', '');
+      giscusScript.setAttribute('data-category-id', 'DIC_kwDORtJgRc4C4_YU');
       giscusScript.setAttribute('data-mapping', 'specific');
       giscusScript.setAttribute('data-term', post.slug);
       giscusScript.setAttribute('data-strict', '0');
@@ -403,7 +392,7 @@
       giscusScript.async = true;
       document.getElementById('giscus-container').appendChild(giscusScript);
 
-      // Carousel interaction
+      // Carousel
       const track = document.querySelector('.post-carousel-track');
       const dots = document.querySelectorAll('.post-carousel-dot');
       const navBtns = document.querySelectorAll('.post-carousel-nav');
@@ -430,7 +419,6 @@
           scrollToSlide(next);
         }));
 
-        // Click slide to open fullscreen
         document.querySelectorAll('.post-carousel-slide').forEach(s => {
           s.addEventListener('click', () => openFsGallery(+s.dataset.idx));
         });
@@ -442,16 +430,9 @@
       const fsCounter = document.getElementById('fsCounter');
       let fsIdx = 0;
 
-      function openFsGallery(idx) {
-        fsIdx = idx;
-        updateFs();
-        fsEl.classList.add('open');
-      }
+      function openFsGallery(idx) { fsIdx = idx; updateFs(); fsEl.classList.add('open'); }
       function closeFsGallery() { fsEl.classList.remove('open'); }
-      function updateFs() {
-        fsImg.src = imgs[fsIdx];
-        fsCounter.textContent = (fsIdx + 1) + ' / ' + imgs.length;
-      }
+      function updateFs() { fsImg.src = imgs[fsIdx]; fsCounter.textContent = (fsIdx + 1) + ' / ' + imgs.length; }
       function fsNav(dir) {
         fsIdx += dir;
         if (fsIdx < 0) fsIdx = imgs.length - 1;
@@ -470,7 +451,7 @@
         if (e.key === 'ArrowLeft') fsNav(-1);
         if (e.key === 'ArrowRight') fsNav(1);
       });
-    }
+      }
   </script>
 
   <!-- Fullscreen gallery -->

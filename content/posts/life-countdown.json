@@ -1,0 +1,17 @@
+{
+  "slug": "life-countdown",
+  "title": "Life Hourglass",
+  "titleCn": "生命沙漏",
+  "date": "2025-11-20",
+  "image": "content/images/life-countdown.png",
+  "images": [
+    "content/images/life-countdown.png",
+    "content/images/life-countdown-setup.png",
+    "content/images/life-countdown-dashboard.png"
+  ],
+  "tags": [
+    "Open Source",
+    "Vibe Coding"
+  ],
+  "body": "<p><a href=\"https://forest0xia.github.io/life-countdown/\">Live · 在线体验 →</a> · <a href=\"https://github.com/forest0xia/life-countdown\">GitHub →</a></p>\n\n<p>A visualization tool that makes the abstract passage of time feel concrete. See your life as a progress bar, a year matrix, remaining meals, projected visits with parents.</p>\n<p>一个让抽象的时间流逝变得具体可感的可视化工具。将你的人生化为进度条、年份矩阵、剩余餐数、与父母的见面次数。</p>\n<p>The \"free time\" breakdown is the one that hits hardest — subtract sleep, work, chores, and screen time, and see what's actually left.</p>\n<p>最触动人的是\"自由时间\"分析——减去睡眠、工作、家务和刷手机的时间，看看真正属于你的还有多少。</p>\n<p>Single HTML file, no dependencies. Shareable reports via unique URLs.</p>\n<p>单 HTML 文件，零依赖。可通过唯一链接分享你的生命报告。</p>"
+}

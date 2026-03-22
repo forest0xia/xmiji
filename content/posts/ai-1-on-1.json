@@ -1,0 +1,19 @@
+{
+  "slug": "ai-1-on-1",
+  "title": "AI 1 on 1",
+  "titleCn": "轻松看懂 AI",
+  "date": "2026-01-10",
+  "image": "content/images/ai1on1.png",
+  "images": [
+    "content/images/ai1on1.png",
+    "content/images/ai1on1-hero.png",
+    "content/images/ai1on1-basics.png",
+    "content/images/ai1on1-companies.png"
+  ],
+  "tags": [
+    "AI",
+    "Open Source",
+    "Vibe Coding"
+  ],
+  "body": "<p><a href=\"https://forest0xia.github.io/ai1on1/\">Live · 在线体验 →</a> · <a href=\"https://github.com/forest0xia/ai1on1\">GitHub →</a></p>\n\n<p>The simplest way to understand those cool-sounding words in the AI world. An interactive, single-file guide covering LLMs, tokens, context, prompts, agents, MCP, RAG, and more.</p>\n<p>用最简单的方式，快速了解 AI 世界里那些听起来很酷的词。单文件交互式指南，涵盖大模型、词元、上下文、提示词、智能体、MCP、RAG 等概念。</p>\n<p>Interactive SVG flow diagrams, token visualizations, and context window demos. Warm color scheme, mobile-friendly, with resources curated for mainland China users.</p>\n<p>交互式 SVG 流程图、词元可视化、上下文窗口演示。暖色调设计，移动端友好，精选中国大陆可访问的学习资源。</p>"
+}

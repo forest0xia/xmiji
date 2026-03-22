@@ -1,0 +1,17 @@
+{
+  "slug": "follow-builders",
+  "title": "Follow Builders",
+  "titleCn": "关注构建者",
+  "date": "2026-03-15",
+  "image": "content/images/follow-builders.png",
+  "images": [
+    "content/images/follow-builders.png",
+    "content/images/follow-builders-readme.png"
+  ],
+  "tags": [
+    "AI",
+    "Open Source",
+    "Vibe Coding"
+  ],
+  "body": "<p><a href=\"https://github.com/forest0xia/follow-builders\">GitHub →</a></p>\n\n<p>An AI-powered digest that monitors 25 curated AI builders on X and 5 major podcasts, then delivers personalized summaries — daily or weekly, in English, Chinese, or both.</p>\n<p>一个 AI 驱动的日报工具，追踪 25 位精选 AI 构建者的 X 动态和 5 档播客，生成个性化摘要——支持中英双语。</p>\n<p>No config files. You set it up through conversation with an AI agent, and customize output by just talking to it or editing plain-English prompt files.</p>\n<p>无需配置文件，通过对话完成设置，用自然语言定制输出。</p>\n<p>The philosophy: <strong>follow the people who actually build things</strong>, not the ones recycling news.</p>\n<p>理念：<strong>关注真正在做事的人</strong>，而非转述新闻的人。</p>"
+}

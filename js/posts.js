@@ -113,7 +113,7 @@ const posts = [
   {
     "slug": "xinyu-innovation",
     "title": "Xinyu Innovation — Startup Years",
-    "titleCn": "新域创新 · 创业岁月",
+    "titleCn": "心域创新 · 创业岁月",
     "date": "2018-11-01",
     "image": "content/images/xinyu-innovation.png",
     "tags": [

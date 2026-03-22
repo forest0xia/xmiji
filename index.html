@@ -14,13 +14,6 @@
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --paper: #f4efe6;
-      --ink: #2a2622;
-      --ink-light: #5a5650;
-      --ink-wash: #8a847e;
-      --ink-faint: #b8b2ab;
-      --vermillion: #c94040;
-      --border: rgba(42, 38, 34, 0.08);
       --font-brush: 'Ma Shan Zheng', cursive;
       --font-display: 'Cormorant Garamond', serif;
       --font-body: 'Crimson Pro', serif;
@@ -38,7 +31,7 @@
       flex-direction: column;
     }
 
-    ::selection { background: var(--vermillion); color: var(--paper); }
+    ::selection { background: var(--selection-bg); color: var(--selection-fg); }
     a { color: inherit; text-decoration: none; }
 
     /* ─── Ink Background ─── */
@@ -55,7 +48,7 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
-      opacity: 0.07;
+      opacity: var(--bg-opacity);
     }
 
     /* ─── Page ─── */
@@ -85,8 +78,8 @@
       border-radius: 50%;
       overflow: hidden;
       margin: 0 auto 28px;
-      box-shadow: 0 4px 24px rgba(42, 38, 34, 0.1);
-      border: 3px solid rgba(255, 255, 255, 0.6);
+      box-shadow: var(--photo-shadow);
+      border: 3px solid var(--photo-border);
       cursor: pointer;
     }
 
@@ -102,10 +95,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      background: rgba(42, 38, 34, 0.4);
+      background: var(--overlay-bg);
       font-family: var(--font-brush);
       font-size: 36px;
-      color: var(--paper);
+      color: var(--ink);
       opacity: 0;
       transition: opacity 0.3s ease;
       margin: 0;
@@ -117,7 +110,7 @@
     .lightbox {
       position: fixed; inset: 0; z-index: 300;
       display: flex; align-items: center; justify-content: center;
-      background: rgba(42, 38, 34, 0.88);
+      background: var(--overlay-bg);
       cursor: pointer;
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
@@ -221,18 +214,17 @@
       font-family: var(--font-body);
       font-size: 15px;
       color: var(--ink);
-      background: rgba(255, 255, 255, 0.45);
+      background: var(--btn-bg);
       backdrop-filter: blur(16px) saturate(1.3);
       -webkit-backdrop-filter: blur(16px) saturate(1.3);
-      border: 1px solid rgba(255, 255, 255, 0.55);
+      border: 1px solid var(--btn-border);
       border-radius: 100px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.04), inset 0 1px 0 rgba(255,255,255,0.5);
+      box-shadow: var(--btn-shadow), var(--btn-inset);
       transition: background 0.3s ease, box-shadow 0.3s ease;
     }
 
     .nav-btn:hover {
-      background: rgba(255, 255, 255, 0.65);
-      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+      background: var(--btn-hover-bg);
     }
 
     .nav-btn .cn {
@@ -253,12 +245,33 @@
       align-items: center;
       justify-content: center;
       background: var(--vermillion);
-      color: var(--paper);
+      color: var(--seal-color);
       font-family: var(--font-brush);
       font-size: 22px;
       border-radius: 3px;
-      opacity: 0.65;
+      opacity: 0.75;
     }
+
+    /* ─── Theme Toggle ─── */
+    .theme-toggle {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 2;
+      width: 38px;
+      height: 38px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--ink-faint);
+      font-size: 18px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: color 0.3s ease, border-color 0.3s ease;
+    }
+    .theme-toggle:hover { color: var(--ink); border-color: var(--ink-faint); }
 
     /* ─── Fade ─── */
     .fade { opacity: 0; animation: fadeIn 0.8s ease forwards; }
@@ -277,8 +290,10 @@
       .profile-photo { width: 88px; height: 88px; margin-bottom: 24px; }
       .name { font-size: 30px; }
       .seal { bottom: 20px; right: 20px; width: 32px; height: 32px; font-size: 18px; }
+      .theme-toggle { bottom: 20px; left: 20px; width: 32px; height: 32px; font-size: 15px; }
     }
   </style>
+  <script src="js/theme.js"></script>
 </head>
 
 <body>
@@ -314,6 +329,7 @@
   </main>
 
   <div class="seal">夏</div>
+  <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">☀</button>
 
   <div class="lightbox" id="lightbox">
     <button class="lightbox-close" aria-label="Close">

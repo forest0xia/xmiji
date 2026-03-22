@@ -109,6 +109,37 @@ All content is bilingual (English + Chinese):
 
 Each tag has a Chinese character mapping defined once in `js/site.js` (`site.tagCN`). Both `gallery.html` and `post.html` read from there — update it in one place.
 
+### Cover images
+
+All gallery thumbnail covers are generated from `content/images/_covers.html`. To regenerate:
+
+1. Edit the HTML template
+2. Open `http://localhost:8000/content/images/_covers.html`
+3. Screenshot each cover element at 900x600
+
+**Style rules:**
+
+| Element | Font | Size | Notes |
+|---------|------|------|-------|
+| Title (English) | Cormorant Garamond 600 | 77–80px | Left or center aligned |
+| Title (Chinese) | Ma Shan Zheng | 52px | Below English title |
+| Tagline | Crimson Pro 300 | 38px | Muted color, below Chinese title |
+| Stat numbers | Cormorant Garamond 600 | 47px | For GitHub stats etc. |
+| Stat labels | Crimson Pro | 21px | Uppercase, letter-spaced |
+| Pills/tags | Crimson Pro | 25–27px | Rounded border, padded |
+
+**Layout rules:**
+
+- Canvas: 900x600px, 3:2 landscape
+- Use infographic elements where possible: mock UI, radar charts, timelines, grids
+- Light covers: `#f4efe6` or `#f0ebe2` background, `#2a2622` text
+- Dark covers: dark gradient background, light text
+- Vermillion accent: `#c94040` for highlights, dots, seals
+- Include both English title and Chinese subtitle on every cover
+- All text must be readable at gallery thumbnail size (~300px wide)
+
+**Secondary images** (post carousel) are actual screenshots of live sites or GitHub repos. Capture at a reasonable resolution and crop to focus on content.
+
 ### Profile photo (index.html)
 
 - Shows a "夏" overlay on hover, opens fullscreen lightbox on click
@@ -116,8 +147,9 @@ Each tag has a Chinese character mapping defined once in `js/site.js` (`site.tag
 
 ## Design
 
-- Ink-wash paper aesthetic with vermillion accents
+- Ink-wash aesthetic with vermillion accents, light and dark themes
 - Fonts: Ma Shan Zheng (brush), Cormorant Garamond (display), Crimson Pro (body)
+- Themes defined in `js/theme.js` — toggle via sun/moon button, persists to localStorage
 - Zero dependencies, zero build tools — pure HTML/CSS/JS
 - Responsive: sidebar filters on desktop, overlay dropdown on mobile
 

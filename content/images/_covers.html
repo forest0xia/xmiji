@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Cormorant+Garamond:wght@400;500;600&family=Crimson+Pro:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { width: 900px; }
+  .cover { width: 900px; height: 600px; display: flex; align-items: center; justify-content: center; text-align: center; position: relative; overflow: hidden; }
+  .title { font-family: 'Cormorant Garamond', serif; font-weight: 600; line-height: 1.1; letter-spacing: -0.02em; }
+  .title-cn { font-family: 'Ma Shan Zheng', cursive; }
+  .tagline { font-family: 'Crimson Pro', serif; font-weight: 300; }
+  .icon-seal { display: inline-flex; align-items: center; justify-content: center; background: #c94040; color: #f4efe6; font-family: 'Ma Shan Zheng', cursive; border-radius: 8px; }
+
+  /* ── 1. CraftHunt ── */
+  #crafthunt { background: #f4efe6; }
+  #crafthunt .layout { display: flex; align-items: center; gap: 56px; padding: 0 72px; text-align: left; }
+  #crafthunt .icon-seal { width: 90px; height: 90px; font-size: 61px; flex-shrink: 0; }
+  #crafthunt .mock { width: 280px; height: 360px; background: #fff; border-radius: 12px; box-shadow: 0 8px 40px rgba(0,0,0,0.08); padding: 24px; flex-shrink: 0; position: relative; overflow: hidden; }
+  #crafthunt .mock-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+  #crafthunt .mock-avatar { width: 32px; height: 32px; border-radius: 50%; background: #c94040; display: flex; align-items: center; justify-content: center; color: #fff; font-family: 'Ma Shan Zheng'; font-size: 23px; }
+  #crafthunt .mock-name { font-family: 'Crimson Pro'; font-size: 19px; color: #2a2622; }
+  #crafthunt .mock-tag { font-size: 15px; color: #8a847e; background: #f4efe6; padding: 2px 8px; border-radius: 100px; margin-left: auto; }
+  #crafthunt .mock-line { height: 10px; border-radius: 5px; margin-bottom: 10px; }
+  #crafthunt .mock-line.w100 { width: 100%; background: rgba(42,38,34,0.06); }
+  #crafthunt .mock-line.w80 { width: 80%; background: rgba(42,38,34,0.05); }
+  #crafthunt .mock-line.w60 { width: 60%; background: rgba(42,38,34,0.04); }
+  #crafthunt .mock-line.w90 { width: 90%; background: rgba(42,38,34,0.06); }
+  #crafthunt .mock-divider { height: 1px; background: rgba(42,38,34,0.06); margin: 16px 0; }
+  #crafthunt .info { flex: 1; }
+  #crafthunt .title { font-size: 80px; color: #2a2622; }
+  #crafthunt .title-cn { font-size: 52px; color: #8a847e; margin-top: 6px; }
+  #crafthunt .tagline { font-size: 38px; color: #5a5650; margin-top: 18px; }
+
+  /* ── 2. Follow Builders ── */
+  #follow-builders { background: linear-gradient(160deg, #1a2744 0%, #2a3a5c 40%, #1e2a48 100%); }
+  #follow-builders .layout { display: flex; align-items: center; gap: 56px; padding: 0 80px; }
+  #follow-builders .mock { width: 260px; height: 340px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 20px; flex-shrink: 0; }
+  #follow-builders .mock-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+  #follow-builders .mock-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  #follow-builders .mock-dot { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
+  #follow-builders .mock-dot.d1 { background: #4a90d9; }
+  #follow-builders .mock-dot.d2 { background: #d4544a; }
+  #follow-builders .mock-dot.d3 { background: #50b87a; }
+  #follow-builders .mock-dot.d4 { background: #e8a840; }
+  #follow-builders .mock-lines { flex: 1; }
+  #follow-builders .ml { height: 8px; border-radius: 4px; margin-bottom: 6px; background: rgba(255,255,255,0.08); }
+  #follow-builders .ml.w70 { width: 70%; }
+  #follow-builders .ml.w90 { width: 90%; }
+  #follow-builders .ml.w50 { width: 50%; }
+  #follow-builders .ml.w80 { width: 80%; }
+  #follow-builders .ml.w60 { width: 60%; }
+  #follow-builders .info { text-align: left; }
+  #follow-builders .emoji { font-size: 57px; margin-bottom: 12px; }
+  #follow-builders .title { font-size: 80px; color: #e8e4dc; }
+  #follow-builders .title-cn { font-size: 52px; color: rgba(232,228,220,0.5); margin-top: 4px; }
+  #follow-builders .tagline { font-size: 38px; color: rgba(232,228,220,0.35); margin-top: 16px; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ── 3. AI Career Navigator ── */
+  #ai-career-navigator { background: #f0ebe2; }
+  #ai-career-navigator .layout { display: flex; align-items: center; gap: 56px; padding: 0 72px; }
+  #ai-career-navigator .radar { width: 260px; height: 260px; flex-shrink: 0; position: relative; }
+  #ai-career-navigator .radar svg { width: 100%; height: 100%; }
+  #ai-career-navigator .info { text-align: left; }
+  #ai-career-navigator .title { font-size: 77px; color: #2a2622; }
+  #ai-career-navigator .title-cn { font-size: 52px; color: #c94040; margin-top: 6px; }
+  #ai-career-navigator .tagline { font-size: 38px; color: #8a847e; margin-top: 16px; }
+
+  /* ── 4. AI 1 on 1 ── */
+  #ai1on1 { background: #f5f0e8; background-image: linear-gradient(rgba(200,180,160,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(200,180,160,0.08) 1px, transparent 1px); background-size: 24px 24px; }
+  #ai1on1 .blocks { display: flex; gap: 14px; justify-content: center; margin-bottom: 28px; }
+  #ai1on1 .block { width: 72px; height: 72px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-family: 'Ma Shan Zheng', cursive; font-size: 41px; color: #f4efe6; }
+  #ai1on1 .block.red { background: #c94040; }
+  #ai1on1 .block.dark { background: #4a4540; }
+  #ai1on1 .title { font-size: 80px; color: #2a2622; }
+  #ai1on1 .title-cn { font-size: 52px; color: #c94040; margin-top: 4px; }
+  #ai1on1 .concepts { display: flex; gap: 16px; justify-content: center; margin-top: 22px; flex-wrap: wrap; max-width: 600px; margin-left: auto; margin-right: auto; }
+  #ai1on1 .concept { font-family: 'Crimson Pro'; font-size: 25px; color: #8a847e; padding: 6px 18px; border: 1px solid rgba(42,38,34,0.1); border-radius: 100px; }
+
+  /* ── 5. Life Hourglass ── */
+  #life-countdown { background: #2a2622; }
+  #life-countdown .grid { display: grid; grid-template-columns: repeat(14, 1fr); gap: 5px; width: 400px; margin: 0 auto 32px; }
+  #life-countdown .cell { width: 100%; aspect-ratio: 1; border-radius: 3px; }
+  #life-countdown .cell.red { background: #c94040; }
+  #life-countdown .cell.dim { background: rgba(255,255,255,0.08); }
+  #life-countdown .cell.mid { background: rgba(201,64,64,0.4); }
+  #life-countdown .title { font-size: 80px; color: #e8e0d4; }
+  #life-countdown .title-cn { font-size: 52px; color: #c94040; margin-top: 6px; }
+  #life-countdown .tagline { font-size: 38px; color: rgba(232,224,212,0.35); margin-top: 16px; }
+
+  /* ── 6. Dota 2 Bot ── */
+  #dota2bot { background: linear-gradient(160deg, #2e3038 0%, #3a3c44 100%); }
+  #dota2bot .emoji { font-size: 85px; margin-bottom: 16px; }
+  #dota2bot .title { font-size: 80px; color: #b0aaa2; }
+  #dota2bot .title-cn { font-size: 52px; color: rgba(176,170,162,0.5); margin-top: 4px; }
+  #dota2bot .stats { display: flex; gap: 56px; justify-content: center; margin-top: 28px; }
+  #dota2bot .stat-num { font-family: 'Cormorant Garamond', serif; font-size: 47px; font-weight: 600; color: #b0aaa2; }
+  #dota2bot .stat-label { font-size: 21px; text-transform: uppercase; letter-spacing: 0.12em; color: rgba(176,170,162,0.4); font-family: 'Crimson Pro', serif; }
+  #dota2bot .stars { position: absolute; top: 24px; right: 32px; font-family: 'Crimson Pro', serif; font-size: 29px; color: rgba(176,170,162,0.5); }
+  #dota2bot .heroes { display: flex; gap: 8px; justify-content: center; margin-top: 20px; }
+  #dota2bot .hero-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(176,170,162,0.15); }
+  #dota2bot .hero-dot.active { background: rgba(201,64,64,0.5); }
+
+  /* ── 7. AWS Career ── */
+  #aws-career { background: #f0ebe2; }
+  #aws-career .layout { display: flex; align-items: center; gap: 48px; padding: 0 72px; }
+  #aws-career .timeline-vis { width: 200px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; }
+  #aws-career .tl-item { display: flex; align-items: center; gap: 14px; width: 100%; }
+  #aws-career .tl-line { width: 2px; height: 40px; background: rgba(42,38,34,0.1); margin-left: 9px; }
+  #aws-career .tl-dot { width: 20px; height: 20px; border-radius: 50%; flex-shrink: 0; }
+  #aws-career .tl-dot.red { background: #c94040; }
+  #aws-career .tl-dot.muted { background: rgba(42,38,34,0.15); }
+  #aws-career .tl-text { font-family: 'Crimson Pro'; font-size: 22px; color: #5a5650; }
+  #aws-career .tl-text small { font-size: 18px; color: #b8b2ab; display: block; }
+  #aws-career .info { text-align: left; flex: 1; }
+  #aws-career .title { font-size: 73px; color: #2a2622; text-align: left; }
+  #aws-career .title-cn { font-size: 52px; color: #c94040; margin-top: 6px; text-align: left; }
+  #aws-career .tagline { font-size: 38px; color: #8a847e; margin-top: 14px; text-align: left; }
+
+  /* ── 8. Xinyu Innovation ── */
+  #xinyu { background: linear-gradient(160deg, #3a3230 0%, #2e2826 60%, #4a3e3a 100%); }
+  #xinyu .pills { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-bottom: 28px; max-width: 520px; }
+  #xinyu .pill { padding: 10px 24px; border-radius: 100px; font-family: 'Crimson Pro', serif; font-size: 27px; border: 1px solid rgba(255,255,255,0.2); color: rgba(232,224,212,0.6); }
+  #xinyu .pill.highlight { background: #c94040; border-color: #c94040; color: #f4efe6; }
+  #xinyu .title { font-size: 77px; color: #e8e0d4; }
+  #xinyu .title-cn { font-size: 52px; color: rgba(232,224,212,0.5); margin-top: 6px; }
+  #xinyu .tagline { font-size: 38px; color: rgba(232,224,212,0.35); margin-top: 18px; }
+</style>
+</head>
+<body>
+
+<!-- 1. CraftHunt -->
+<div class="cover" id="crafthunt">
+  <div class="layout">
+    <div class="mock">
+      <div class="mock-header"><div class="mock-avatar">猎</div><div class="mock-name">Market Pulse AI</div><div class="mock-tag">Daily</div></div>
+      <div class="mock-line w100"></div><div class="mock-line w90"></div><div class="mock-line w60"></div>
+      <div class="mock-divider"></div>
+      <div class="mock-header"><div class="mock-avatar" style="background:#4a90d9">研</div><div class="mock-name">Research Digest</div><div class="mock-tag">Weekly</div></div>
+      <div class="mock-line w90"></div><div class="mock-line w80"></div><div class="mock-line w70" style="margin-bottom:0"></div>
+      <div class="mock-divider"></div>
+      <div class="mock-header"><div class="mock-avatar" style="background:#50b87a">码</div><div class="mock-name">Code Review Bot</div><div class="mock-tag">Per PR</div></div>
+      <div class="mock-line w80"></div><div class="mock-line w100"></div><div class="mock-line w60" style="margin-bottom:0"></div>
+    </div>
+    <div class="info">
+      <div class="icon-seal" style="margin-bottom:20px">猎</div>
+      <div class="title">CraftHunt</div>
+      <div class="title-cn">手艺猎人</div>
+      <div class="tagline">Substack for AI agent outputs</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. Follow Builders -->
+<div class="cover" id="follow-builders">
+  <div class="layout">
+    <div class="mock">
+      <div class="mock-item"><div class="mock-dot d1"></div><div class="mock-lines"><div class="ml w70"></div><div class="ml w90"></div></div></div>
+      <div class="mock-item"><div class="mock-dot d2"></div><div class="mock-lines"><div class="ml w80"></div><div class="ml w60"></div></div></div>
+      <div class="mock-item"><div class="mock-dot d3"></div><div class="mock-lines"><div class="ml w90"></div><div class="ml w50"></div></div></div>
+      <div class="mock-item"><div class="mock-dot d4"></div><div class="mock-lines"><div class="ml w60"></div><div class="ml w80"></div></div></div>
+      <div class="mock-item"><div class="mock-dot d1" style="opacity:0.5"></div><div class="mock-lines"><div class="ml w70"></div><div class="ml w90"></div></div></div>
+    </div>
+    <div class="info">
+      <div class="emoji">📡</div>
+      <div class="title">Follow Builders</div>
+      <div class="title-cn">关注构建者</div>
+      <div class="tagline">AI Digest · Curated Signals</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. AI Career Navigator -->
+<div class="cover" id="ai-career-navigator">
+  <div class="layout">
+    <div class="radar">
+      <svg viewBox="0 0 260 260">
+        <!-- Radar grid -->
+        <polygon points="130,30 220,80 220,180 130,230 40,180 40,80" fill="none" stroke="rgba(201,64,64,0.08)" stroke-width="1"/>
+        <polygon points="130,55 195,92 195,168 130,205 65,168 65,92" fill="none" stroke="rgba(201,64,64,0.08)" stroke-width="1"/>
+        <polygon points="130,80 170,105 170,155 130,180 90,155 90,105" fill="none" stroke="rgba(201,64,64,0.08)" stroke-width="1"/>
+        <!-- Axes -->
+        <line x1="130" y1="30" x2="130" y2="230" stroke="rgba(201,64,64,0.06)" stroke-width="1"/>
+        <line x1="40" y1="80" x2="220" y2="180" stroke="rgba(201,64,64,0.06)" stroke-width="1"/>
+        <line x1="40" y1="180" x2="220" y2="80" stroke="rgba(201,64,64,0.06)" stroke-width="1"/>
+        <!-- Data shape -->
+        <polygon points="130,45 200,95 185,170 130,200 70,155 65,90" fill="rgba(201,64,64,0.12)" stroke="rgba(201,64,64,0.4)" stroke-width="2"/>
+        <!-- Data points -->
+        <circle cx="130" cy="45" r="5" fill="#c94040"/>
+        <circle cx="200" cy="95" r="5" fill="#c94040"/>
+        <circle cx="185" cy="170" r="5" fill="#c94040"/>
+        <circle cx="130" cy="200" r="5" fill="#c94040"/>
+        <circle cx="70" cy="155" r="5" fill="#c94040"/>
+        <circle cx="65" cy="90" r="5" fill="#c94040"/>
+        <!-- Labels -->
+        <text x="130" y="18" text-anchor="middle" font-family="Crimson Pro" font-size="15" fill="#8a847e">Adoption</text>
+        <text x="235" y="85" text-anchor="start" font-family="Crimson Pro" font-size="15" fill="#8a847e">Mindset</text>
+        <text x="235" y="185" text-anchor="start" font-family="Crimson Pro" font-size="15" fill="#8a847e">Craft</text>
+        <text x="130" y="250" text-anchor="middle" font-family="Crimson Pro" font-size="15" fill="#8a847e">Depth</text>
+        <text x="25" y="185" text-anchor="end" font-family="Crimson Pro" font-size="15" fill="#8a847e">Reliability</text>
+        <text x="25" y="85" text-anchor="end" font-family="Crimson Pro" font-size="15" fill="#8a847e">Agents</text>
+      </svg>
+    </div>
+    <div class="info">
+      <div class="title">AI Career<br>Navigator</div>
+      <div class="title-cn">AI 职业导航</div>
+      <div class="tagline">Six Axes · Adaptive Assessment</div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. AI 1 on 1 -->
+<div class="cover" id="ai1on1">
+  <div>
+    <div class="blocks">
+      <div class="block red">模</div>
+      <div class="block red">词</div>
+      <div class="block dark">智</div>
+      <div class="block red">代</div>
+    </div>
+    <div class="title">AI 1 on 1</div>
+    <div class="title-cn">轻松看懂 AI</div>
+    <div class="concepts">
+      <div class="concept">LLM</div>
+      <div class="concept">Tokens</div>
+      <div class="concept">Agents</div>
+      <div class="concept">RAG</div>
+      <div class="concept">MCP</div>
+    </div>
+  </div>
+</div>
+
+<!-- 5. Life Hourglass -->
+<div class="cover" id="life-countdown">
+  <div>
+    <div class="grid" id="lcGrid"></div>
+    <div class="title">Life Hourglass</div>
+    <div class="title-cn">生命沙漏</div>
+    <div class="tagline">Visualize what's left</div>
+  </div>
+</div>
+
+<!-- 6. Dota 2 Bot -->
+<div class="cover" id="dota2bot">
+  <div class="stars">★ 218</div>
+  <div>
+    <div class="emoji">🎮</div>
+    <div class="title">Dota 2 Bot</div>
+    <div class="title-cn">Dota 2 机器人</div>
+    <div class="stats">
+      <div><div class="stat-num">361</div><div class="stat-label">Commits</div></div>
+      <div><div class="stat-num">39</div><div class="stat-label">Forks</div></div>
+      <div><div class="stat-num">127</div><div class="stat-label">Heroes</div></div>
+    </div>
+    <div class="heroes"><div class="hero-dot active"></div><div class="hero-dot active"></div><div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot active"></div><div class="hero-dot"></div><div class="hero-dot active"></div></div>
+  </div>
+</div>
+
+<!-- 7. AWS Career -->
+<div class="cover" id="aws-career">
+  <div class="layout">
+    <div class="timeline-vis">
+      <div class="tl-item"><div class="tl-dot red"></div><div class="tl-text">Quick Suite<small>Senior SDE · 2025–</small></div></div>
+      <div class="tl-line"></div>
+      <div class="tl-item"><div class="tl-dot red"></div><div class="tl-text">Amazon One<small>SDE II · 2022–2025</small></div></div>
+      <div class="tl-line"></div>
+      <div class="tl-item"><div class="tl-dot muted"></div><div class="tl-text">Physical Stores<small>SDE I · 2020–2022</small></div></div>
+    </div>
+    <div class="info">
+      <div class="title">Six Years at<br>Amazon & AWS</div>
+      <div class="title-cn">亚马逊六年</div>
+      <div class="tagline">Distributed systems at scale</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Xinyu Innovation -->
+<div class="cover" id="xinyu">
+  <div>
+    <div class="pills">
+      <div class="pill highlight">Founder · 创始人</div>
+      <div class="pill">Backend · Java</div>
+      <div class="pill">Frontend · Vue</div>
+      <div class="pill">iOS</div>
+      <div class="pill">PM</div>
+    </div>
+    <div class="title">Xinyu Innovation</div>
+    <div class="title-cn">心域创新 · 创业岁月</div>
+    <div class="tagline">Shenzhen · 深圳 · 2015–2018</div>
+  </div>
+</div>
+
+<script>
+  // Life Hourglass grid
+  const grid = document.getElementById('lcGrid');
+  for (let r = 0; r < 4; r++) {
+    for (let c = 0; c < 14; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'cell';
+      if (r < 2) cell.classList.add(c < 10 ? 'red' : (c < 12 ? 'mid' : 'dim'));
+      else cell.classList.add('dim');
+      grid.appendChild(cell);
+    }
+  }
+</script>
+</body>
+</html>

@@ -19,6 +19,8 @@ content/posts/index.json  Ordered list of post slugs (newest first)
 content/images/           Cover images and screenshots
 content/images/_covers.html  HTML template for generating cover images
 assets/                   Profile photo, background textures
+assets/fonts.css          Self-hosted font CSS with inline CJK subset
+scripts/update-font-subset.sh  Regenerates inline Chinese font subset
 ```
 
 ## Adding a new post
@@ -114,6 +116,20 @@ Two themes: light (default) and dark. Toggle via sun/moon button in the nav bar.
 - Persists to `localStorage` — consistent across all pages
 - All colors use CSS custom properties; no hardcoded rgba in HTML
 - To add a new theme: add an object to the `themes` map in `theme.js`
+
+## Fonts
+
+Fonts are served from `assets/fonts.css` (local copy of Google Fonts CSS), with font files loaded from `fonts.gstatic.com` (+ `gstatic.loli.net` mirror for China).
+
+**Chinese font subset**: The top of `assets/fonts.css` contains an inline base64 `@font-face` for Ma Shan Zheng, covering only the ~46 Chinese characters used in UI elements (nav, sidebar, seals, post titles). This uses `font-display: block` so these characters render instantly with zero flash. The full Ma Shan Zheng loads via `font-display: swap` for body text.
+
+**When adding new Chinese UI characters** (new tags, new post titleCn):
+
+```bash
+bash scripts/update-font-subset.sh
+```
+
+This script automatically collects all Chinese characters from UI elements, fetches a minimal font subset from Google Fonts, base64-encodes it, and updates `assets/fonts.css`.
 
 ## Content rules
 

@@ -7,7 +7,7 @@ const themes = {
   light: {
     '--paper':        '#f4efe6',
     '--ink':          '#2a2622',
-    '--ink-light':    '#5a5650',
+    '--ink-light':    '#181818',
     '--ink-wash':     '#8a847e',
     '--ink-faint':    '#b8b2ab',
     '--vermillion':   '#c94040',
@@ -43,7 +43,7 @@ const themes = {
   dark: {
     '--paper':        '#1a1816',
     '--ink':          '#e8e0d4',
-    '--ink-light':    '#b8b0a4',
+    '--ink-light':    '#bababa',
     '--ink-wash':     '#8a847e',
     '--ink-faint':    '#5a5650',
     '--vermillion':   '#d4544a',

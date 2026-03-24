@@ -125,22 +125,25 @@
     .fs-gallery {
       position: fixed; inset: 0; z-index: 300;
       background: rgba(20, 18, 16, 0.95);
-      display: flex; align-items: center; justify-content: center;
       opacity: 0; pointer-events: none;
       transition: opacity 0.3s ease;
       will-change: opacity;
     }
     .fs-gallery.open { opacity: 1; pointer-events: auto; }
-    .fs-gallery img {
-      max-width: 92vw; max-height: 88vh; object-fit: contain;
-      border-radius: 4px;
-      transform: scale(0.95);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      will-change: transform;
+    .fs-track {
+      width: 100%; height: 100%;
+      display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch; scrollbar-width: none;
+      touch-action: none;
     }
-    .fs-gallery.open img { transform: scale(1); }
+    .fs-track::-webkit-scrollbar { display: none; }
+    .fs-slide {
+      flex: 0 0 100%; height: 100%; scroll-snap-align: start;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .fs-slide img { max-width: 92vw; max-height: 88vh; object-fit: contain; border-radius: 4px; cursor: zoom-in; will-change: transform; }
     .fs-gallery-close {
-      position: absolute; top: 20px; right: 20px;
+      position: absolute; top: 20px; right: 20px; z-index: 2;
       width: 40px; height: 40px; border-radius: 50%; border: none;
       background: rgba(255,255,255,0.12); color: #f4efe6; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -149,7 +152,7 @@
     .fs-gallery-close:hover { background: rgba(255,255,255,0.2); }
     .fs-gallery-close svg { width: 20px; height: 20px; }
     .fs-gallery-nav {
-      position: absolute; top: 50%; transform: translateY(-50%);
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
       width: 48px; height: 48px; border-radius: 50%; border: none;
       background: rgba(255,255,255,0.1); color: #f4efe6; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
@@ -159,10 +162,16 @@
     .fs-gallery-nav.prev { left: 20px; }
     .fs-gallery-nav.next { right: 20px; }
     .fs-gallery-nav svg { width: 20px; height: 20px; }
-    .fs-gallery-counter {
-      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
-      font-size: 14px; color: rgba(244,239,230,0.5); font-family: var(--font-body);
+    .fs-dots {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); z-index: 2;
+      display: flex; gap: 8px;
     }
+    .fs-dot {
+      width: 7px; height: 7px; border-radius: 50%; border: none; padding: 0;
+      background: rgba(244,239,230,0.35); cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .fs-dot.active { background: var(--vermillion); }
 
     .post-title {
       font-family: var(--font-display);
@@ -362,6 +371,21 @@
   <footer class="footer">
     <span class="footer-text">&copy; 2026 Forest Xia</span>
   </footer>
+
+  <!-- Fullscreen gallery -->
+  <div class="fs-gallery" id="fsGallery">
+    <button class="fs-gallery-close" aria-label="Close">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <button class="fs-gallery-nav prev" data-dir="-1" aria-label="Previous">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <div class="fs-track" id="fsTrack"></div>
+    <button class="fs-gallery-nav next" data-dir="1" aria-label="Next">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
+    </button>
+    <div class="fs-dots" id="fsDots"></div>
+  </div>
 
   <script src="js/site.js"></script>
   <script src="js/posts.js"></script>
@@ -571,26 +595,186 @@
 
       // Fullscreen gallery
       const fsEl = document.getElementById('fsGallery');
-      const fsImg = document.getElementById('fsImg');
-      const fsCounter = document.getElementById('fsCounter');
+      const fsTrack = document.getElementById('fsTrack');
+      const fsDots = document.getElementById('fsDots');
       let fsIdx = 0;
 
-      function openFsGallery(idx) { fsIdx = idx; updateFs(); fsEl.classList.add('open'); }
-      function closeFsGallery() { fsEl.classList.remove('open'); }
-      function updateFs() { fsImg.src = imgs[fsIdx]; fsCounter.textContent = (fsIdx + 1) + ' / ' + imgs.length; }
-      function fsNav(dir) {
-        fsIdx += dir;
-        if (fsIdx < 0) fsIdx = imgs.length - 1;
-        if (fsIdx >= imgs.length) fsIdx = 0;
-        updateFs();
+      // Zoom & gesture state
+      let fsScale = 1, fsTranslateX = 0, fsTranslateY = 0;
+      let fsTapLast = 0, fsTapLastX = 0, fsTapLastY = 0;
+      let fsTouchStart = null, fsPinchStart = null, fsIsPanning = false;
+      let fsLastWasTouch = false;
+
+      function getFsImg() { return fsTrack.children[fsIdx]?.querySelector('img') || null; }
+
+      function applyFsZoom(img, animated) {
+        img.style.transition = animated ? 'transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)' : '';
+        img.style.transform = `translate(${fsTranslateX}px,${fsTranslateY}px) scale(${fsScale})`;
+        img.style.cursor = fsScale > 1 ? 'grab' : 'zoom-in';
       }
+
+      function clampFsTranslate(img) {
+        const mX = img.offsetWidth * (fsScale - 1) / 2;
+        const mY = img.offsetHeight * (fsScale - 1) / 2;
+        fsTranslateX = Math.max(-mX, Math.min(mX, fsTranslateX));
+        fsTranslateY = Math.max(-mY, Math.min(mY, fsTranslateY));
+      }
+
+      function resetFsZoom(animated) {
+        fsScale = 1; fsTranslateX = 0; fsTranslateY = 0;
+        const img = getFsImg();
+        if (img) {
+          img.style.transition = animated ? 'transform 0.25s cubic-bezier(0.25,0.46,0.45,0.94)' : '';
+          img.style.transform = '';
+          img.style.cursor = 'zoom-in';
+          if (animated) setTimeout(() => { if (img) img.style.transition = ''; }, 300);
+        }
+      }
+
+      function fsToggleZoom(cx, cy) {
+        const img = getFsImg();
+        if (!img) return;
+        if (fsScale > 1) {
+          resetFsZoom(true);
+        } else {
+          fsScale = 2.5;
+          const r = img.getBoundingClientRect();
+          const cxRel = cx - (r.left + r.width / 2);
+          const cyRel = cy - (r.top + r.height / 2);
+          fsTranslateX = cxRel * (1 - fsScale);
+          fsTranslateY = cyRel * (1 - fsScale);
+          clampFsTranslate(img);
+          applyFsZoom(img, true);
+        }
+      }
+
+      imgs.forEach((src, i) => {
+        const slide = document.createElement('div');
+        slide.className = 'fs-slide';
+        const img = document.createElement('img');
+        img.src = src; img.alt = post.title + ' ' + (i + 1);
+        slide.appendChild(img);
+        fsTrack.appendChild(slide);
+
+        const dot = document.createElement('button');
+        dot.className = 'fs-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to image ' + (i + 1));
+        dot.addEventListener('click', () => { resetFsZoom(false); fsIdx = i; scrollFsTo(i); updateFsDots(); });
+        fsDots.appendChild(dot);
+      });
+
+      if (imgs.length <= 1) {
+        fsDots.style.display = 'none';
+        fsEl.querySelectorAll('.fs-gallery-nav').forEach(b => b.style.display = 'none');
+      }
+
+      function scrollFsTo(idx) {
+        fsTrack.scrollTo({ left: idx * fsTrack.offsetWidth, behavior: 'smooth' });
+      }
+      function updateFsDots() {
+        fsDots.querySelectorAll('.fs-dot').forEach((d, i) => d.classList.toggle('active', i === fsIdx));
+      }
+      function openFsGallery(idx) {
+        fsIdx = idx; resetFsZoom(false);
+        fsEl.classList.add('open');
+        requestAnimationFrame(() => { fsTrack.scrollLeft = idx * fsTrack.offsetWidth; updateFsDots(); });
+      }
+      function closeFsGallery() { resetFsZoom(false); fsEl.classList.remove('open'); }
+      function fsNav(dir) {
+        resetFsZoom(false);
+        fsIdx = (fsIdx + dir + imgs.length) % imgs.length;
+        scrollFsTo(fsIdx); updateFsDots();
+      }
+
+      fsTrack.addEventListener('scroll', () => {
+        fsIdx = Math.round(fsTrack.scrollLeft / fsTrack.offsetWidth);
+        updateFsDots();
+      }, { passive: true });
+
+      // Touch: pinch-to-zoom, double-tap toggle, swipe to navigate, pan when zoomed
+      fsTrack.addEventListener('touchstart', e => {
+        fsLastWasTouch = true;
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          fsTouchStart = null;
+          fsPinchStart = {
+            dist: Math.hypot(e.touches[1].clientX - e.touches[0].clientX, e.touches[1].clientY - e.touches[0].clientY),
+            scale: fsScale, tx: fsTranslateX, ty: fsTranslateY
+          };
+        } else if (e.touches.length === 1) {
+          const t = e.touches[0], now = Date.now();
+          if (now - fsTapLast < 300 && Math.hypot(t.clientX - fsTapLastX, t.clientY - fsTapLastY) < 40) {
+            e.preventDefault();
+            fsToggleZoom(t.clientX, t.clientY);
+            fsTapLast = 0;
+          } else {
+            fsTapLast = now; fsTapLastX = t.clientX; fsTapLastY = t.clientY;
+            fsTouchStart = { x: t.clientX, y: t.clientY, tx: fsTranslateX, ty: fsTranslateY };
+            fsIsPanning = false;
+          }
+        }
+      }, { passive: false });
+
+      fsTrack.addEventListener('touchmove', e => {
+        if (e.touches.length === 2 && fsPinchStart) {
+          e.preventDefault();
+          const dist = Math.hypot(e.touches[1].clientX - e.touches[0].clientX, e.touches[1].clientY - e.touches[0].clientY);
+          fsScale = Math.max(1, Math.min(5, fsPinchStart.scale * dist / fsPinchStart.dist));
+          const img = getFsImg();
+          if (img) { clampFsTranslate(img); applyFsZoom(img, false); }
+        } else if (e.touches.length === 1 && fsTouchStart) {
+          const t = e.touches[0], dx = t.clientX - fsTouchStart.x, dy = t.clientY - fsTouchStart.y;
+          if (fsScale > 1) {
+            e.preventDefault();
+            fsIsPanning = true;
+            fsTranslateX = fsTouchStart.tx + dx;
+            fsTranslateY = fsTouchStart.ty + dy;
+            const img = getFsImg();
+            if (img) { clampFsTranslate(img); applyFsZoom(img, false); }
+          } else if (Math.abs(dx) > Math.abs(dy)) {
+            e.preventDefault();
+            fsTrack.scrollLeft = fsIdx * fsTrack.offsetWidth - dx;
+          }
+        }
+      }, { passive: false });
+
+      fsTrack.addEventListener('touchend', e => {
+        if (fsTouchStart && !fsIsPanning) {
+          const t = e.changedTouches[0], dx = t.clientX - fsTouchStart.x;
+          if (fsScale === 1 && Math.abs(dx) > 48) {
+            fsNav(dx < 0 ? 1 : -1);
+          } else {
+            scrollFsTo(fsIdx);
+          }
+        }
+        if (fsScale < 1.05) resetFsZoom(false);
+        fsTouchStart = null; fsPinchStart = null; fsIsPanning = false;
+      });
+
+      // Mouse wheel zoom (desktop/trackpad)
+      fsTrack.addEventListener('wheel', e => {
+        if (!fsEl.classList.contains('open')) return;
+        e.preventDefault();
+        fsScale = Math.max(1, Math.min(5, fsScale * (e.deltaY < 0 ? 1.12 : 0.89)));
+        const img = getFsImg();
+        if (img) { clampFsTranslate(img); applyFsZoom(img, false); }
+      }, { passive: false });
+
+      // Desktop: single click image to zoom, click dark area to close
+      fsTrack.addEventListener('click', e => {
+        if (fsLastWasTouch) { fsLastWasTouch = false; return; }
+        if (e.target.tagName === 'IMG') {
+          fsToggleZoom(e.clientX, e.clientY);
+        } else if (fsScale === 1) {
+          closeFsGallery();
+        }
+      });
 
       if (fsEl) {
         fsEl.querySelector('.fs-gallery-close').addEventListener('click', closeFsGallery);
         fsEl.querySelectorAll('.fs-gallery-nav').forEach(b => {
           b.addEventListener('click', e => { e.stopPropagation(); fsNav(+b.dataset.dir); });
         });
-        fsEl.addEventListener('click', e => { if (e.target === fsEl) closeFsGallery(); });
         document.addEventListener('keydown', e => {
           if (!fsEl.classList.contains('open')) return;
           if (e.key === 'Escape') closeFsGallery();
@@ -601,19 +785,5 @@
       }
   </script>
 
-  <!-- Fullscreen gallery -->
-  <div class="fs-gallery" id="fsGallery">
-    <button class="fs-gallery-close" aria-label="Close">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-    <button class="fs-gallery-nav prev" data-dir="-1" aria-label="Previous">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-    </button>
-    <img id="fsImg" src="" alt="">
-    <button class="fs-gallery-nav next" data-dir="1" aria-label="Next">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg>
-    </button>
-    <span class="fs-gallery-counter" id="fsCounter"></span>
-  </div>
 </body>
 </html>

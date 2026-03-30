@@ -1,0 +1,12 @@
+{
+  "slug": "openglobes-space",
+  "title": "OpenGlobes Space",
+  "titleCn": "此刻太空",
+  "date": "2026-03-29",
+  "image": "content/images/openglobes-space.png",
+  "images": [
+    "content/images/openglobes-space.png"
+  ],
+  "tags": ["Open Source", "Vibe Coding"],
+  "body": "<p><a href=\"https://space.openglobes.com/\">space.openglobes.com →</a> · <a href=\"https://github.com/forest0xia/openglobes-space\">GitHub →</a></p>\n\n<p>A real-time 3D solar system visualization that runs in the browser. It tracks 10,000+ satellites using SGP4 orbital propagation, renders planets with NASA high-resolution textures, and supports seamless multi-scale zoom — from low-Earth-orbit satellites all the way out to the Milky Way.</p>\n<p>一个浏览器端的实时 3D 太阳系可视化应用。通过 SGP4 轨道传播算法实时追踪一万多颗在轨卫星，使用 NASA 高清纹理渲染行星，支持从近地轨道到银河系的多尺度无缝缩放。</p>\n\n<p>Features include a full solar system with real proportional scale, 14 deep-space probes with live trajectory lines, natural moons for Jupiter and Saturn, atmospheric glow with Fresnel shading, planet occlusion for labels and markers, and a time-control system to speed up or reverse the simulation.</p>\n<p>功能包括真实比例的完整太阳系、14 个深空探测器及实时轨迹线、木星和土星的天然卫星、基于 Fresnel 着色的大气光晕、行星遮挡标签自动隐藏，以及可加速或倒放的时间控制系统。</p>\n\n<p>Built with Three.js and vanilla TypeScript. Part of the <a href=\"https://openglobes.com\">OpenGlobes</a> project — open-source 3D data globe visualizations.</p>\n<p>基于 Three.js 和原生 TypeScript 构建。属于 <a href=\"https://openglobes.com\">OpenGlobes</a> 项目的一部分——开源 3D 数据地球可视化。</p>"
+}

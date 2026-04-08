@@ -4,6 +4,26 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Loading... — Forest Xia</title>
+  <meta name="description" content="Article by Forest Xia (夏明优 / Mingyou Xia).">
+  <meta name="keywords" content="Forest Xia, Mingyou Xia, 夏明优">
+  <link rel="canonical" href="https://xmiji.com/post.html">
+  <link rel="alternate" hreflang="en" href="https://xmiji.com/post.html">
+  <link rel="alternate" hreflang="zh" href="https://xmiji.com/post.html">
+  <link rel="alternate" hreflang="x-default" href="https://xmiji.com/post.html">
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Forest Xia">
+  <meta property="og:description" content="Article by Forest Xia (Mingyou Xia).">
+  <meta property="og:url" content="https://xmiji.com/post.html">
+  <meta property="og:image" content="https://xmiji.com/assets/profile.jpg">
+  <meta property="og:site_name" content="Forest Xia">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="zh_CN">
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Forest Xia">
+  <meta name="twitter:description" content="Article by Forest Xia (Mingyou Xia).">
+  <meta name="twitter:image" content="https://xmiji.com/assets/profile.jpg">
   <link rel="icon" href="favicon.png" type="image/png">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -415,8 +435,51 @@
       } else {
 
       document.title = `${post.title} — Forest Xia`;
+      const postDesc = post.body.replace(/<[^>]*>/g, '').slice(0, 160);
+      const postUrl = `https://xmiji.com/post.html?id=${post.slug}`;
+      const postImage = `https://xmiji.com/${post.image}`;
+
+      // Update meta description
       const meta = document.querySelector('meta[name="description"]');
-      if (meta) meta.content = post.body.replace(/<[^>]*>/g, '').slice(0, 160);
+      if (meta) meta.content = postDesc;
+
+      // Update canonical URL
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.href = postUrl;
+
+      // Update hreflang URLs
+      document.querySelectorAll('link[hreflang]').forEach(l => l.href = postUrl);
+
+      // Update Open Graph tags
+      const ogUpdates = { 'og:title': `${post.title} — Forest Xia`, 'og:description': postDesc, 'og:url': postUrl, 'og:image': postImage };
+      Object.entries(ogUpdates).forEach(([prop, val]) => {
+        const el = document.querySelector(`meta[property="${prop}"]`);
+        if (el) el.content = val;
+      });
+
+      // Update Twitter Card tags
+      const twUpdates = { 'twitter:title': `${post.title} — Forest Xia`, 'twitter:description': postDesc, 'twitter:image': postImage };
+      Object.entries(twUpdates).forEach(([name, val]) => {
+        const el = document.querySelector(`meta[name="${name}"]`);
+        if (el) el.content = val;
+      });
+
+      // Inject JSON-LD structured data
+      const ldJson = document.createElement('script');
+      ldJson.type = 'application/ld+json';
+      ldJson.textContent = JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "description": postDesc,
+        "image": postImage,
+        "url": postUrl,
+        "datePublished": post.date,
+        "author": { "@type": "Person", "name": "Forest Xia", "alternateName": ["Mingyou Xia", "夏明优"], "url": "https://xmiji.com" },
+        "publisher": { "@type": "Person", "name": "Forest Xia", "url": "https://xmiji.com" },
+        "keywords": post.tags.join(', ')
+      });
+      document.head.appendChild(ldJson);
 
       function formatDate(d) {
         return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});

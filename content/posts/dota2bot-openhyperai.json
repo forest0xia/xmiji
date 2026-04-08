@@ -13,5 +13,5 @@
     "Gaming",
     "Open Source"
   ],
-  "body": "<p><a href=\"https://github.com/forest0xia/dota2bot-OpenHyperAI\">GitHub →</a></p>\n\n<p>An open-source bot AI for Dota 2 that supports all 127 heroes with customizable difficulty, picks, bans, items, and skill builds. 218 stars, 39 forks, 361 commits.</p>\n<p>一个开源的 Dota 2 机器人 AI，支持全部 127 位英雄，可自定义难度、选禁、出装和加点。218 星标，39 分叉，361 次提交。</p>\n<p>Features a dynamic difficulty mode (Fretbots) and an AI chatbot for in-game interaction. Built on Valve's bot framework in Lua with some TypeScript.</p>\n<p>包含动态难度模式（Fretbots）和游戏内 AI 聊天机器人。基于 Valve 官方机器人框架，使用 Lua 和 TypeScript 开发。</p>"
+  "body": "[GitHub →](https://github.com/forest0xia/dota2bot-OpenHyperAI)\n\nAn open-source bot AI for Dota 2 that supports all 127 heroes with customizable difficulty, picks, bans, items, and skill builds. 218 stars, 39 forks, 361 commits.\n\n一个开源的 Dota 2 机器人 AI，支持全部 127 位英雄，可自定义难度、选禁、出装和加点。218 星标，39 分叉，361 次提交。\n\nFeatures a dynamic difficulty mode (Fretbots) and an AI chatbot for in-game interaction. Built on Valve's bot framework in Lua with some TypeScript.\n\n包含动态难度模式（Fretbots）和游戏内 AI 聊天机器人。基于 Valve 官方机器人框架，使用 Lua 和 TypeScript 开发。"
 }

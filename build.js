@@ -41,8 +41,8 @@ htmlFiles.forEach(file => {
   if (!fs.existsSync(file)) return;
   const html = fs.readFileSync(file, 'utf8');
 
-  // Extract inline <script> blocks (skip ones with src)
-  const scriptRe = /<script(?![^>]*\bsrc\b)[^>]*>([\s\S]*?)<\/script>/gi;
+  // Extract inline <script> blocks (skip ones with src or type="application/ld+json")
+  const scriptRe = /<script(?![^>]*\bsrc\b)(?![^>]*type="application\/ld\+json")[^>]*>([\s\S]*?)<\/script>/gi;
   let match, blockIdx = 0;
   while ((match = scriptRe.exec(html)) !== null) {
     blockIdx++;
@@ -58,7 +58,7 @@ htmlFiles.forEach(file => {
   // Check external script files exist
   const srcRe = /<script[^>]+src="([^"]+)"/gi;
   while ((match = srcRe.exec(html)) !== null) {
-    if (match[1].startsWith('http')) continue;
+    if (match[1].startsWith('http') || match[1].startsWith('//')) continue;
     if (!fs.existsSync(match[1])) fail(`${file}: script not found: ${match[1]}`);
   }
 });

@@ -485,9 +485,9 @@
         return new Date(d+'T00:00:00').toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
       }
 
-      // Lightweight markdown → HTML (supports body content that isn't already HTML)
+      // Markdown → HTML renderer
       function md(text) {
-        if (!text || text.trim().startsWith('<')) return text; // already HTML
+        if (!text) return text;
         return text
           .replace(/^### (.+)$/gm, '<h3>$1</h3>')
           .replace(/^## (.+)$/gm, '<h2>$1</h2>')
@@ -847,6 +847,7 @@
       }
       }
   </script>
+  <script data-goatcounter="https://xmiji.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
 </html>
